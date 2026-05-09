@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brief — Ruke malih biznisa</title>
+
+<!-- favicon: pretpostavlja logo.png u istom folderu (kvadratni, transparent) -->
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Caveat:wght@400;500;600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream:        #F6EEDF;
+  --cream-deep:   #E5D4B8;
+  --honey-light:  #E5B575;
+  --honey:        #C8924A;
+  --honey-deep:   #A06F2E;
+  --umber:        #8E4A1F;
+  --umber-deep:   #5C2E12;
+  --sage:         #7A9486;
+  --sage-deep:    #5A7B4F;
+  --rose-dust:    #C97D7A;
+  --ink:          #1F1812;
+  --ink-warm:     #3D2E20;
+  --ink-soft:     #6B5848;
+  --ink-faint:    #9C8A78;
+  --rule:         rgba(160, 111, 46, 0.18);
+  --rule-strong:  rgba(160, 111, 46, 0.32);
+  --bg-paper:     #FAF4E8;
+  --error:        #B14A3E;
+  --ok:           #5A7B4F;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg-paper);
+  font-family: 'Lora', serif;
+  color: var(--ink);
+  line-height: 1.5;
+  padding: 50px 24px;
+  position: relative;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(229, 181, 117, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 82% 76%, rgba(122, 148, 134, 0.05) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── TOOLBAR (sticky) ── */
+.toolbar {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  background: rgba(31, 24, 18, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 999px;
+  padding: 8px 10px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  box-shadow: 0 6px 24px rgba(31, 24, 18, 0.18);
+}
+.toolbar button, .toolbar label {
+  font-family: 'Lora', serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--cream);
+  background: transparent;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.18s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.toolbar button:hover, .toolbar label:hover {
+  background: rgba(229, 181, 117, 0.18);
+  color: #fff;
+}
+.toolbar .sep {
+  width: 1px;
+  height: 18px;
+  background: rgba(229, 181, 117, 0.30);
+  margin: 0 2px;
+}
+.toolbar input[type="file"] { display: none; }
+
+.view-toggle {
+  display: inline-flex;
+  background: rgba(229, 181, 117, 0.12);
+  border-radius: 999px;
+  padding: 3px;
+  margin-right: 4px;
+}
+.view-toggle button {
+  padding: 5px 14px;
+  font-size: 0.82rem;
+  border-radius: 999px;
+  color: var(--cream);
+}
+.view-toggle button.active {
+  background: var(--honey-deep);
+  color: #fff;
+}
+.view-toggle button:hover:not(.active) {
+  background: rgba(229, 181, 117, 0.10);
+}
+
+/* ── DOC SHELL ── */
+.brief {
+  max-width: 880px;
+  margin: 60px auto 40px;
+  background: var(--cream);
+  padding: 60px 70px;
+  position: relative;
+  z-index: 1;
+  box-shadow:
+    0 1px 2px rgba(31, 24, 18, 0.04),
+    0 8px 24px rgba(31, 24, 18, 0.06),
+    0 24px 60px rgba(31, 24, 18, 0.06);
+  border-radius: 4px;
+}
+.brief::before {
+  content: '';
+  position: absolute;
+  top: 14px; left: 14px; right: 14px; bottom: 14px;
+  border: 0.5px solid rgba(160, 111, 46, 0.16);
+  pointer-events: none;
+}
+
+/* ── HEADER ── */
+/* ── HEADER ── */
+.brand-mark {
+  display: block;
+  margin: 0 auto 18px;
+  max-width: 260px;
+  max-height: 80px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(31, 24, 18, 0.06));
+  animation: brand-mark-fade-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+@keyframes brand-mark-fade-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.brief-eyebrow {
+  font-family: 'Caveat', cursive;
+  font-size: 1.15rem;
+  color: var(--honey-deep);
+  text-align: center;
+  letter-spacing: 0.02em;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+.brief-title {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-size: 2.6rem;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0 0 4px;
+  line-height: 1.05;
+}
+.brief-title em {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-style: italic;
+  color: var(--honey-deep);
+  font-weight: 500;
+}
+.brief-sub {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  text-align: center;
+  color: var(--ink-soft);
+  margin: 6px auto 0;
+  max-width: 600px;
+  line-height: 1.55;
+}
+.brief-meta-row {
+  margin-top: 28px;
+  padding: 14px 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5pt;
+}
+.brief-meta-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.meta-label {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-soft);
+  font-size: 8pt;
+}
+.meta-value {
+  font-family: 'Lora', serif;
+  font-size: 11pt;
+  color: var(--ink);
+  font-weight: 500;
+}
+.meta-value em {
+  color: var(--honey-deep);
+  font-style: italic;
+}
+
+/* ── SECTION ── */
+.s {
+  margin-top: 44px;
+  padding-top: 0;
+}
+.s-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 18px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--ink);
+}
+.s-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10pt;
+  color: var(--honey-deep);
+  letter-spacing: 0.16em;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.s-title {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-size: 1.6rem;
+  font-weight: 500;
+  margin: 0;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+.s-title em {
+  font-style: italic;
+  color: var(--honey-deep);
+  font-weight: 500;
+}
+.s-help {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+  margin: 0 0 14px;
+  line-height: 1.55;
+}
+
+/* ── DATA GRID (klijent info) ── */
+.data-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 32px;
+}
+.data-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-bottom: 1px dotted var(--rule);
+  padding-bottom: 8px;
+}
+.data-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5pt;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.data-value {
+  font-family: 'Lora', serif;
+  font-size: 11.5pt;
+  color: var(--ink);
+  font-weight: 500;
+  word-break: break-word;
+}
+.data-value.empty {
+  color: var(--ink-faint);
+  font-style: italic;
+  font-weight: 400;
+}
+.data-value a {
+  color: var(--honey-deep);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--rule);
+}
+
+/* ── PROSE / TEXT BLOCK ── */
+.prose-block {
+  background: rgba(255, 255, 255, 0.5);
+  border-left: 3px solid var(--honey);
+  padding: 16px 22px;
+  margin: 12px 0 18px;
+  font-family: 'Lora', serif;
+  font-size: 11pt;
+  color: var(--ink-warm);
+  line-height: 1.7;
+  white-space: pre-wrap;
+  border-radius: 0 4px 4px 0;
+}
+.prose-block.empty {
+  color: var(--ink-faint);
+  font-style: italic;
+  background: rgba(255, 255, 255, 0.3);
+  border-left-color: var(--rule-strong);
+}
+.prose-block-title {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--honey-deep);
+  font-weight: 500;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* ── PACKAGE CARD ── */
+.pack-card {
+  background: linear-gradient(135deg, rgba(229, 181, 117, 0.14) 0%, rgba(200, 146, 74, 0.08) 100%);
+  border: 1px solid var(--honey);
+  border-radius: 6px;
+  padding: 22px 26px;
+  position: relative;
+  margin-bottom: 14px;
+}
+.pack-card::before {
+  content: '◆';
+  position: absolute;
+  top: 14px; right: 18px;
+  color: var(--honey-deep);
+  font-size: 14pt;
+}
+.pack-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9pt;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  margin-bottom: 6px;
+}
+.pack-title {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-size: 1.8rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.pack-meta {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 10pt;
+  color: var(--ink-soft);
+}
+.pack-meta strong {
+  color: var(--honey-deep);
+  font-style: normal;
+  font-weight: 600;
+}
+
+/* ── HOSTING DISPLAY ── */
+.hosting-display {
+  margin-top: 14px;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+  border-left: 3px solid var(--sage-deep);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.hosting-display.empty {
+  border-left-color: var(--error);
+  background: rgba(177, 74, 62, 0.05);
+}
+.hosting-display-text {
+  flex: 1;
+  font-family: 'Lora', serif;
+  font-size: 10.5pt;
+  color: var(--ink-warm);
+}
+.hosting-display-text strong {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-size: 13pt;
+  display: block;
+  margin-bottom: 2px;
+  color: var(--ink);
+  font-weight: 600;
+}
+.hosting-display-text em {
+  font-style: italic;
+  color: var(--ink-soft);
+  font-size: 9.5pt;
+}
+.hosting-display-price {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--honey-deep);
+  white-space: nowrap;
+}
+
+/* ── ADDONS LIST ── */
+.addons-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 16px;
+  font-family: 'Lora', serif;
+  font-size: 10pt;
+}
+.addons-list li {
+  padding: 6px 0 6px 22px;
+  position: relative;
+  color: var(--ink-warm);
+  border-bottom: 1px dotted var(--rule);
+  line-height: 1.45;
+}
+.addons-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 5px;
+  color: var(--sage-deep);
+  font-weight: 700;
+}
+.addons-list.empty li {
+  color: var(--ink-faint);
+  font-style: italic;
+}
+.addons-list.empty li::before {
+  content: '○';
+  color: var(--ink-faint);
+}
+
+/* ── COLOR SWATCH DISPLAY ── */
+.color-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 8px;
+}
+.color-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.color-chip-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink);
+  box-shadow: 0 2px 6px rgba(31, 24, 18, 0.10);
+}
+.color-chip-name {
+  font-family: 'Lora', serif;
+  font-size: 9pt;
+  font-style: italic;
+  color: var(--ink-soft);
+  letter-spacing: 0.02em;
+}
+
+/* ── BADGES (logo status, etc) ── */
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5pt;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.badge.ok {
+  background: rgba(90, 123, 79, 0.14);
+  color: var(--sage-deep);
+}
+.badge.todo {
+  background: rgba(160, 111, 46, 0.14);
+  color: var(--honey-deep);
+}
+.badge.empty {
+  background: rgba(155, 138, 120, 0.14);
+  color: var(--ink-soft);
+}
+
+/* ── STUDIO ONLY (toggle visibility) ── */
+.studio-only {
+  display: none;
+  position: relative;
+}
+body[data-view="studio"] .studio-only {
+  display: block;
+}
+.studio-section .s-head {
+  border-bottom-color: var(--rose-dust);
+  border-bottom-width: 2px;
+  border-bottom-style: dashed;
+}
+.studio-section .s-num {
+  color: var(--rose-dust);
+}
+.studio-banner {
+  background: rgba(201, 125, 122, 0.08);
+  border: 1px dashed var(--rose-dust);
+  padding: 10px 16px;
+  border-radius: 4px;
+  margin-bottom: 18px;
+  font-family: 'Caveat', cursive;
+  font-size: 1.1rem;
+  color: var(--rose-dust);
+  text-align: center;
+  font-weight: 500;
+}
+
+/* ── CHECKLIST ── */
+.checklist {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 18px;
+  margin: 10px 0;
+}
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Lora', serif;
+  font-size: 10pt;
+  color: var(--ink-warm);
+  transition: all 0.18s;
+  user-select: none;
+}
+.check-item:hover {
+  border-color: var(--honey);
+  background: rgba(229, 181, 117, 0.06);
+}
+.check-item.done {
+  background: rgba(90, 123, 79, 0.10);
+  border-color: var(--sage-deep);
+  color: var(--ink);
+}
+.check-mark {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1.5px solid var(--ink-faint);
+  flex-shrink: 0;
+  position: relative;
+  background: white;
+}
+.check-item.done .check-mark {
+  background: var(--sage-deep);
+  border-color: var(--sage-deep);
+}
+.check-item.done .check-mark::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -65%) rotate(-45deg);
+  width: 9px; height: 5px;
+  border: 2px solid white;
+  border-top: none;
+  border-right: none;
+}
+
+/* ── EDITABLE FIELDS (studio meta) ── */
+[contenteditable="true"] {
+  outline: none;
+  background: rgba(229, 181, 117, 0.10);
+  padding: 1px 6px;
+  border-radius: 2px;
+  border-bottom: 1px dashed rgba(160, 111, 46, 0.3);
+  transition: background 0.2s;
+  cursor: text;
+  min-width: 30px;
+  display: inline-block;
+}
+[contenteditable="true"]:hover {
+  background: rgba(229, 181, 117, 0.18);
+}
+[contenteditable="true"]:focus {
+  background: rgba(229, 181, 117, 0.22);
+  border-bottom-color: var(--honey-deep);
+  border-bottom-style: solid;
+}
+[contenteditable="true"]:empty::before {
+  content: attr(data-placeholder);
+  color: var(--ink-faint);
+  font-style: italic;
+  pointer-events: none;
+}
+.editable-block {
+  display: block;
+  min-height: 60px;
+  padding: 12px 16px;
+  font-family: 'Lora', serif;
+  font-size: 10.5pt;
+  line-height: 1.6;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  color: var(--ink-warm);
+}
+
+/* ── EMPTY-STATE WHEN NO DATA LOADED ── */
+.no-data-banner {
+  background: linear-gradient(135deg, rgba(201, 125, 122, 0.10), rgba(229, 181, 117, 0.06));
+  border-left: 3px solid var(--rose-dust);
+  padding: 22px 26px;
+  margin: 30px 0 0;
+  border-radius: 0 4px 4px 0;
+  display: none;
+}
+body[data-empty="true"] .no-data-banner { display: block; }
+body[data-empty="true"] .s:not(.studio-section) { opacity: 0.4; pointer-events: none; }
+.no-data-banner-title {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  font-style: italic;
+  color: var(--rose-dust);
+  margin: 0 0 8px;
+}
+.no-data-banner-text {
+  font-family: 'Lora', serif;
+  font-size: 10.5pt;
+  color: var(--ink-warm);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── DOC FOOTER ── */
+.doc-footer {
+  margin-top: 50px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: 'Lora', serif;
+  font-size: 9pt;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+.doc-footer .b {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-style: normal;
+  font-weight: 500;
+  color: var(--ink);
+}
+.doc-footer .footer-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.doc-footer .footer-mark {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  opacity: 0.55;
+  filter: drop-shadow(0 1px 2px rgba(31, 24, 18, 0.08));
+  flex-shrink: 0;
+  transition: opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.doc-footer .footer-mark:hover { opacity: 0.85; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink);
+  color: var(--cream);
+  padding: 12px 24px;
+  border-radius: 999px;
+  font-family: 'Lora', serif;
+  font-size: 0.92rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s;
+  z-index: 200;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ── PRINT MODE ── */
+@media print {
+  body {
+    background: white;
+    padding: 0;
+  }
+  body::before { display: none; }
+  .toolbar, .toast, .no-data-banner { display: none !important; }
+  .brief {
+    box-shadow: none;
+    margin: 0;
+    padding: 30mm 25mm;
+    max-width: none;
+  }
+  .brief::before { display: none; }
+  /* in print, both views always show — let user choose what to print */
+  .studio-only { display: block !important; }
+  [contenteditable="true"] {
+    background: transparent;
+    border-bottom: none;
+    padding: 0;
+  }
+  .s { page-break-inside: avoid; }
+}
+
+@media (max-width: 720px) {
+  body { padding: 30px 12px; }
+  .toolbar { flex-wrap: wrap; max-width: calc(100% - 24px); }
+  .brief { padding: 36px 22px; margin-top: 80px; }
+  .brief-title { font-size: 2rem; }
+  .brief-meta-row { grid-template-columns: 1fr; gap: 10px; }
+  .data-grid { grid-template-columns: 1fr; }
+  .addons-list { grid-template-columns: 1fr; }
+  .checklist { grid-template-columns: 1fr; }
+}
+/* ════════════════════════════════════════════════════════════════════
+   LIQUID GLASS DESIGN SYSTEM v1 — Apple-inspired glassmorphism
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --glass-bg:          rgba(255, 252, 245, 0.55);
+  --glass-bg-strong:   rgba(255, 252, 245, 0.78);
+  --glass-bg-tint:     rgba(229, 181, 117, 0.10);
+  --glass-bg-warm:     rgba(229, 181, 117, 0.18);
+  --glass-border:      rgba(255, 255, 255, 0.65);
+  --glass-border-soft: rgba(255, 255, 255, 0.40);
+  --glass-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.60),
+    inset 0 -1px 0 rgba(31, 24, 18, 0.04),
+    0 1px 2px rgba(31, 24, 18, 0.04),
+    0 8px 24px rgba(31, 24, 18, 0.06);
+  --glass-shadow-hover:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 14px 36px rgba(160, 111, 46, 0.14),
+    0 0 0 1px rgba(229, 181, 117, 0.22);
+  --glass-blur:        blur(14px) saturate(180%);
+  --glass-blur-strong: blur(24px) saturate(200%);
+
+  --ease-spring:       cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-quint:    cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── Ambient drifting orbs ── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 12% 18%, rgba(229, 181, 117, 0.14) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 35% at 88% 82%, rgba(122, 148, 134, 0.10) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 50% 100%, rgba(201, 125, 122, 0.07) 0%, transparent 70%);
+  animation: ambient-drift 28s ease-in-out infinite alternate;
+}
+@keyframes ambient-drift {
+  0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+  50%  { transform: translate(2%, -1%) scale(1.04); opacity: 0.85; }
+  100% { transform: translate(-1%, 1%) scale(0.96); opacity: 1; }
+}
+
+/* Document appear */
+.brief {
+  animation: doc-appear 0.8s var(--ease-out-quint);
+}
+@keyframes doc-appear {
+  from { opacity: 0; transform: translateY(20px) scale(0.99); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Sections subtly stagger in */
+.s {
+  animation: s-appear 0.6s var(--ease-out-quint) backwards;
+}
+.s:nth-of-type(1) { animation-delay: 0.20s; }
+.s:nth-of-type(2) { animation-delay: 0.27s; }
+.s:nth-of-type(3) { animation-delay: 0.34s; }
+.s:nth-of-type(4) { animation-delay: 0.41s; }
+.s:nth-of-type(5) { animation-delay: 0.48s; }
+.s:nth-of-type(6) { animation-delay: 0.55s; }
+.s:nth-of-type(7) { animation-delay: 0.62s; }
+@keyframes s-appear {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── TOOLBAR (already glass-y, refine further) ── */
+.toolbar {
+  background: rgba(31, 24, 18, 0.72) !important;
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.20),
+    0 12px 36px rgba(31, 24, 18, 0.30),
+    0 0 0 1px rgba(229, 181, 117, 0.10);
+  animation: toolbar-slide-in 0.55s var(--ease-spring) 0.1s backwards;
+}
+@keyframes toolbar-slide-in {
+  from { opacity: 0; transform: translate(-50%, -20px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+.toolbar button, .toolbar label {
+  transition: all 0.3s var(--ease-out-quint) !important;
+}
+.toolbar button:hover, .toolbar label:hover {
+  transform: translateY(-1px);
+}
+.toolbar button:active, .toolbar label:active {
+  transform: translateY(0);
+}
+.view-toggle button.active {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.20),
+    0 2px 8px rgba(160, 111, 46, 0.40);
+}
+
+/* ── BRIEF SHELL (subtle glass on outer frame) ── */
+.brief {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── PACK CARD (paket prikaz) ── */
+.pack-card {
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  background: linear-gradient(135deg,
+    rgba(229, 181, 117, 0.20) 0%,
+    rgba(200, 146, 74, 0.10) 100%) !important;
+  border: 1px solid rgba(229, 181, 117, 0.40);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.60),
+    inset 0 -1px 0 rgba(160, 111, 46, 0.10),
+    0 4px 14px rgba(160, 111, 46, 0.10);
+  transition: all 0.4s var(--ease-out-quint);
+}
+.pack-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    0 12px 32px rgba(160, 111, 46, 0.18),
+    0 0 0 1px rgba(229, 181, 117, 0.50);
+}
+
+/* ── HOSTING DISPLAY ── */
+.hosting-display {
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  background: rgba(255, 252, 245, 0.65) !important;
+  border: 1px solid var(--glass-border-soft);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    0 2px 8px rgba(31, 24, 18, 0.03);
+}
+.hosting-display.empty {
+  background: rgba(177, 74, 62, 0.06) !important;
+}
+
+/* ── PROSE BLOCK (priča) ── */
+.prose-block {
+  backdrop-filter: blur(10px) saturate(160%);
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
+  background: rgba(255, 252, 245, 0.65) !important;
+  border: 1px solid var(--glass-border-soft);
+  border-left: 3px solid var(--honey);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    0 1px 2px rgba(31, 24, 18, 0.03);
+  transition: all 0.32s var(--ease-out-quint);
+}
+.prose-block:hover {
+  background: rgba(255, 252, 245, 0.80) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.70),
+    0 4px 14px rgba(160, 111, 46, 0.06);
+}
+
+/* ── COLOR CHIPS (spring hover) ── */
+.color-chip {
+  transition: transform 0.32s var(--ease-spring);
+}
+.color-chip:hover {
+  transform: translateY(-3px) rotate(-3deg);
+}
+.color-chip-circle {
+  transition: all 0.32s var(--ease-spring);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.40),
+    0 4px 10px rgba(31, 24, 18, 0.10);
+}
+.color-chip:hover .color-chip-circle {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    0 8px 20px rgba(31, 24, 18, 0.20),
+    0 0 0 3px rgba(255, 255, 255, 0.45);
+}
+
+/* ── ADDONS LIST (glass tint on hover) ── */
+.addons-list li {
+  transition: all 0.24s ease;
+  border-radius: 4px;
+  padding-left: 26px;
+}
+.addons-list li:hover {
+  background: rgba(229, 181, 117, 0.08);
+  padding-left: 30px;
+}
+
+/* ── CHECKLIST (Apple-style toggles) ── */
+.check-item {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: rgba(255, 252, 245, 0.55) !important;
+  border: 1px solid var(--glass-border-soft);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 1px 2px rgba(31, 24, 18, 0.03);
+  transition: all 0.3s var(--ease-out-quint) !important;
+  position: relative;
+  overflow: hidden;
+}
+.check-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    rgba(229, 181, 117, 0.14) 0%,
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.check-item:hover {
+  background: rgba(255, 252, 245, 0.78) !important;
+  border-color: rgba(229, 181, 117, 0.42);
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.70),
+    0 6px 18px rgba(160, 111, 46, 0.10);
+}
+.check-item:hover::before { opacity: 1; }
+.check-item.done {
+  background: linear-gradient(135deg,
+    rgba(122, 148, 134, 0.18) 0%,
+    rgba(90, 123, 79, 0.10) 100%) !important;
+  border-color: rgba(90, 123, 79, 0.40);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    0 4px 14px rgba(90, 123, 79, 0.14);
+}
+.check-mark {
+  transition: all 0.32s var(--ease-spring);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.40),
+    0 1px 2px rgba(31, 24, 18, 0.06);
+}
+.check-item.done .check-mark {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.30),
+    0 2px 8px rgba(90, 123, 79, 0.40);
+}
+@keyframes check-pop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.25) rotate(-4deg); }
+  70%  { transform: scale(0.95) rotate(2deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+/* ── EDITABLE FIELDS (glass focus) ── */
+[contenteditable="true"]:focus {
+  background: rgba(255, 255, 255, 0.92) !important;
+  box-shadow:
+    inset 0 0 0 1px var(--honey-deep),
+    0 0 0 4px rgba(200, 146, 74, 0.14);
+  border-radius: 4px;
+}
+.editable-block {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background: rgba(255, 252, 245, 0.58) !important;
+  border: 1px solid var(--glass-border-soft);
+  transition: all 0.28s var(--ease-out-quint);
+}
+.editable-block:focus {
+  background: rgba(255, 255, 255, 0.90) !important;
+  border-color: var(--honey-deep);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.60),
+    0 0 0 4px rgba(200, 146, 74, 0.14);
+}
+
+/* ── BADGES (refined) ── */
+.badge {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.40),
+    0 1px 2px rgba(31, 24, 18, 0.06);
+  transition: transform 0.28s var(--ease-spring);
+}
+.badge:hover { transform: scale(1.03); }
+
+/* ── DATA ROWS (subtle hover) ── */
+.data-row {
+  transition: all 0.24s ease;
+}
+.data-row:hover {
+  border-bottom-color: rgba(160, 111, 46, 0.32);
+  padding-left: 4px;
+}
+
+/* ── NO-DATA BANNER (refined glass) ── */
+.no-data-banner {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: linear-gradient(135deg,
+    rgba(201, 125, 122, 0.14) 0%,
+    rgba(229, 181, 117, 0.08) 100%) !important;
+  border: 1px solid rgba(201, 125, 122, 0.30);
+  border-left: 3px solid var(--rose-dust);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.50),
+    0 4px 16px rgba(201, 125, 122, 0.08);
+}
+
+/* ── STUDIO BANNER ── */
+.studio-banner {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background: rgba(201, 125, 122, 0.10) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.40),
+    0 1px 2px rgba(201, 125, 122, 0.06);
+}
+
+/* ── TOAST (refined glass) ── */
+.toast {
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(31, 24, 18, 0.88) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 12px 32px rgba(31, 24, 18, 0.30);
+}
+
+/* ── PRINT MODE: disable all glass ── */
+@media print {
+  body::after { display: none; }
+  .pack-card, .hosting-display, .prose-block, .check-item, .editable-block, .toast, .badge, .no-data-banner {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: white !important;
+    box-shadow: none !important;
+  }
+  .pack-card { background: rgba(229, 181, 117, 0.10) !important; }
+  .check-item.done {
+    background: rgba(122, 148, 134, 0.10) !important;
+    border-color: rgba(90, 123, 79, 0.40) !important;
+  }
+  .brief, .s { animation: none !important; }
+}
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body data-view="klijent" data-empty="true">
+
+<!-- ── TOOLBAR ── -->
+<div class="toolbar">
+  <div class="view-toggle" role="tablist">
+    <button id="viewKlijent" class="active" onclick="setView('klijent')">Klijentski</button>
+    <button id="viewStudio" onclick="setView('studio')">Studio</button>
+  </div>
+  <div class="sep"></div>
+  <label>
+    Učitaj JSON
+    <input type="file" id="importFile" accept=".json,application/json" onchange="importState(event.target.files[0])">
+  </label>
+  <button onclick="exportState()">Izvezi JSON</button>
+  <div class="sep"></div>
+  <button onclick="window.print()">Štampaj</button>
+  <button onclick="resetForm()">Reset</button>
+</div>
+
+<!-- ── DOCUMENT ── -->
+<article class="brief">
+
+  <!-- HEADER -->
+  <!-- header-logo.png — horizontal lockup, ~720×180, transparent PNG, isti folder -->
+  <img class="brand-mark" src="header-logo.png" alt="Ruke malih biznisa" onerror="this.style.display='none'">
+  <div class="brief-eyebrow">~ #RukeMalihBiznisa · Brief ~</div>
+  <h1 class="brief-title">Evo kako smo te <em>razumjeli.</em></h1>
+  <p class="brief-sub">
+    Ovo je rezime svega što ste nam naveli u upitniku. Pročitajte, provjerite da li smo
+	dobro razumjeli, i javite nam ukoliko želite nešto dopuniti prije nego počnemo s aktivnostima.
+  </p>
+
+  <div class="brief-meta-row">
+    <div class="brief-meta-cell">
+      <span class="meta-label">Klijent</span>
+      <span class="meta-value" id="metaKlijent">—</span>
+    </div>
+    <div class="brief-meta-cell">
+      <span class="meta-label">Datum ulaza</span>
+      <span class="meta-value" id="metaDatum">—</span>
+    </div>
+    <div class="brief-meta-cell">
+      <span class="meta-label">Subdomena</span>
+      <span class="meta-value"><em id="metaSubdomena">tvoj-biznis.netlify.app</em></span>
+    </div>
+  </div>
+
+  <!-- NO DATA BANNER -->
+  <div class="no-data-banner">
+    <p class="no-data-banner-title">~ Brief je još prazan ~</p>
+    <p class="no-data-banner-text">
+      Učitaj JSON fajl iz onboarding upitnika klikom na <strong>"Učitaj JSON"</strong> u toolbar-u na vrhu.
+      Fajl koji klijent skida nakon slanja upitnika ima ime poput
+      <em>Ruke_diamond-peglanje_2026-05-05.json</em>. Bez tog fajla, sve sekcije ispod će biti prazne.
+    </p>
+  </div>
+
+  <!-- ─────── 01. KLIJENT ─────── -->
+  <section class="s">
+    <div class="s-head">
+      <span class="s-num">№ 01</span>
+      <h2 class="s-title">Tvoji <em>podaci.</em></h2>
+    </div>
+    <div class="data-grid">
+      <div class="data-row">
+        <span class="data-label">Ime i prezime</span>
+        <span class="data-value" id="kKlijentIme">—</span>
+      </div>
+      <div class="data-row">
+        <span class="data-label">Naziv biznisa</span>
+        <span class="data-value" id="kKlijentBiznis">—</span>
+      </div>
+      <div class="data-row">
+        <span class="data-label">Telefon</span>
+        <span class="data-value" id="kKlijentTelefon">—</span>
+      </div>
+      <div class="data-row">
+        <span class="data-label">E-mail</span>
+        <span class="data-value" id="kKlijentEmail">—</span>
+      </div>
+      <div class="data-row">
+        <span class="data-label">Grad / kraj</span>
+        <span class="data-value" id="kKlijentGrad">—</span>
+      </div>
+      <div class="data-row">
+        <span class="data-label">Tip biznisa</span>
+        <span class="data-value" id="kKlijentTip">—</span>
+      </div>
+      <div class="data-row">
+        <span class="data-label">Iskustvo u poslu</span>
+        <span class="data-value" id="kKlijentIskustvo">—</span>
+      </div>
+      <div class="data-row">
+        <span class="data-label">Preferirani kanal</span>
+        <span class="data-value" id="kKlijentKanal">—</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────── 02. PAKET I HOSTING ─────── -->
+  <section class="s">
+    <div class="s-head">
+      <span class="s-num">№ 02</span>
+      <h2 class="s-title">Paket i <em>hosting.</em></h2>
+    </div>
+    <p class="s-help">
+      Tvoj odabrani paket i način kako ćemo brinuti o stranici kroz godinu.
+    </p>
+
+    <div class="pack-card">
+      <div class="pack-name" id="kPackName">PAKET</div>
+      <div class="pack-title" id="kPackTitle">—</div>
+      <div class="pack-meta"><span id="kPackSub">—</span> · <strong id="kPackCijena">—</strong></div>
+    </div>
+
+    <div class="hosting-display" id="kHosting">
+      <div class="hosting-display-text">
+        <strong id="kHostingNaziv">Hosting nije izabran</strong>
+        <em id="kHostingTag">Klijent treba da odabere model</em>
+      </div>
+      <div class="hosting-display-price" id="kHostingCijena">—</div>
+    </div>
+
+    <h3 class="prose-block-title" style="margin-top:20px">Dodaci</h3>
+    <ul class="addons-list empty" id="kAddons">
+      <li>Nije izabran nijedan dodatak.</li>
+    </ul>
+  </section>
+
+  <!-- ─────── 03. POSAO ─────── -->
+  <section class="s">
+    <div class="s-head">
+      <span class="s-num">№ 03</span>
+      <h2 class="s-title">Šta <em>radiš.</em></h2>
+    </div>
+
+    <h3 class="prose-block-title">Usluge i cijene</h3>
+    <div class="prose-block empty" id="kUsluge">Nije popunjeno.</div>
+
+    <div class="data-grid">
+      <div class="data-row">
+        <span class="data-label">Cijene javno?</span>
+        <span class="data-value" id="kCijeneJavno">—</span>
+      </div>
+      <div class="data-row">
+        <span class="data-label">Lokacija rada</span>
+        <span class="data-value" id="kLokacija">—</span>
+      </div>
+      <div class="data-row" style="grid-column:span 2">
+        <span class="data-label">Radno vrijeme</span>
+        <span class="data-value" id="kRadnoVrijeme">—</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────── 04. PRIČA ─────── -->
+  <section class="s">
+    <div class="s-head">
+      <span class="s-num">№ 04</span>
+      <h2 class="s-title">Tvoja <em>priča.</em></h2>
+    </div>
+
+    <h3 class="prose-block-title">O nama</h3>
+    <div class="prose-block empty" id="kONama">Nije popunjeno.</div>
+
+    <h3 class="prose-block-title">Čime se ističemo</h3>
+    <div class="prose-block empty" id="kCime">Nije popunjeno.</div>
+
+    <h3 class="prose-block-title">Česta pitanja</h3>
+    <div class="prose-block empty" id="kFAQ">Nije popunjeno.</div>
+
+    <h3 class="prose-block-title">Najveći problem koji rješavamo</h3>
+    <div class="prose-block empty" id="kProblem">Nije popunjeno.</div>
+
+    <h3 class="prose-block-title">Inspiracije / referentne stranice</h3>
+    <div class="prose-block empty" id="kInspiracije">Nije popunjeno.</div>
+  </section>
+
+  <!-- ─────── 05. VIZUAL ─────── -->
+  <section class="s">
+    <div class="s-head">
+      <span class="s-num">№ 05</span>
+      <h2 class="s-title">Vizual i <em>boje.</em></h2>
+    </div>
+
+    <div class="data-grid">
+      <div class="data-row">
+        <span class="data-label">Logo</span>
+        <span class="data-value" id="kLogoStatus">—</span>
+      </div>
+      <div class="data-row">
+        <span class="data-label">Materijali primljeni?</span>
+        <span class="data-value" id="kMaterijaliStatus">
+          <span class="badge empty">Status u Studio view</span>
+        </span>
+      </div>
+    </div>
+
+    <h3 class="prose-block-title" style="margin-top:18px">Boje koje voliš</h3>
+    <div class="color-display" id="kBoje">
+      <span class="data-value empty">Nije izabrano.</span>
+    </div>
+  </section>
+
+  <!-- ─────── 06. NAPOMENE ─────── -->
+  <section class="s">
+    <div class="s-head">
+      <span class="s-num">№ 06</span>
+      <h2 class="s-title">Tvoje <em>napomene.</em></h2>
+    </div>
+    <div class="prose-block empty" id="kNapomene">Bez dodatnih napomena.</div>
+  </section>
+
+  <!-- ─────── 07. STUDIO META (visible only in Studio view) ─────── -->
+  <section class="s studio-only studio-section">
+    <div class="studio-banner">~ Ova sekcija nije vidljiva klijentu u Klijentskom view-u ~</div>
+    <div class="s-head">
+      <span class="s-num">STUDIO</span>
+      <h2 class="s-title">Interna <em>kontrola.</em></h2>
+    </div>
+
+    <div class="data-grid" style="margin-bottom:20px">
+      <div class="data-row">
+        <span class="data-label">Subdomena (npr. diamond.ruke.ba)</span>
+        <span class="data-value"><span contenteditable="true" data-key="subdomena" data-placeholder="biznis.ruke.ba"></span></span>
+      </div>
+      <div class="data-row">
+        <span class="data-label">Ponuda broj</span>
+        <span class="data-value"><span contenteditable="true" data-key="ponuda_broj" data-placeholder="2026-001"></span></span>
+      </div>
+      <div class="data-row">
+        <span class="data-label">Ponuda datum</span>
+        <span class="data-value"><span contenteditable="true" data-key="ponuda_datum" data-placeholder="05.05.2026."></span></span>
+      </div>
+      <div class="data-row">
+        <span class="data-label">Datum ulaza (auto)</span>
+        <span class="data-value" id="sDatumUlaza">—</span>
+      </div>
+    </div>
+
+    <h3 class="prose-block-title">Checklist isporuke</h3>
+    <div class="checklist" id="checklist">
+      <div class="check-item" data-check="logo_done">
+        <span class="check-mark"></span>
+        <span>Logo gotov / primljen</span>
+      </div>
+      <div class="check-item" data-check="fotografije_primljene">
+        <span class="check-mark"></span>
+        <span>Fotografije primljene</span>
+      </div>
+      <div class="check-item" data-check="copy_odobren">
+        <span class="check-mark"></span>
+        <span>Copy odobren od klijenta</span>
+      </div>
+      <div class="check-item" data-check="gbp_setup">
+        <span class="check-mark"></span>
+        <span>Google Business profil setup</span>
+      </div>
+      <div class="check-item" data-check="ssl_aktivan">
+        <span class="check-mark"></span>
+        <span>SSL aktivan na subdomeni</span>
+      </div>
+      <div class="check-item" data-check="handoff_zakazan">
+        <span class="check-mark"></span>
+        <span>Handoff sastanak zakazan</span>
+      </div>
+    </div>
+
+    <h3 class="prose-block-title" style="margin-top:24px">Interne napomene (samo studio)</h3>
+    <div class="editable-block" contenteditable="true" data-key="interne_napomene" data-placeholder="Razgovori s klijentom van forme, posebne stvari na koje paziti, edge case-ovi..."></div>
+  </section>
+
+  <!-- ── DOC FOOTER ── -->
+  <div class="doc-footer">
+    <div class="footer-left">
+      <!-- logo.png — square mark, ~512×512, transparent PNG, isti folder -->
+      <img class="footer-mark" src="logo.png" alt="" onerror="this.style.display='none'">
+      <div>
+        <span class="b">Ruke malih biznisa</span> ·
+        <em id="docFooterDate">—</em>
+      </div>
+    </div>
+    <div>
+      <em>brief v1 · canonical schema · zdravo@ruke.ba</em>
+    </div>
+  </div>
+
+</article>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONSTANTS ──
+const STORAGE_KEY = 'ruke-brief-state';
+
+const TIP_BIZNISA_LABEL = {
+  peglanje: 'Peglanje rublja', frizer: 'Frizerski salon', manikir: 'Manikir / pedikir',
+  kozmetika: 'Kozmetički salon', estetika: 'Trepavice / obrve / šminka',
+  snajderica: 'Šnajderica / krojač', ciscenje: 'Čišćenje / spremačica',
+  catering: 'Catering / kolači / torte', masaza: 'Masaže / fizio / wellness',
+  majstor: 'Majstor (vodoinstalater, električar, moler)', instrukcije: 'Instrukcije / časovi'
+};
+const ISKUSTVO_LABEL = {
+  'manje-1': 'Manje od godinu', '1-3': '1–3 godine', '3-7': '3–7 godina', '7+': 'Više od 7 godina'
+};
+const LOKACIJA_LABEL = {
+  dolaze: 'Klijenti dolaze meni', idem: 'Ja idem klijentima', oboje: 'Oboje — mješovito'
+};
+const KANAL_LABEL = {
+  whatsapp: 'WhatsApp', poziv: 'Poziv', email: 'E-mail', bilo: 'Svejedno'
+};
+const CIJENE_LABEL = {
+  da: 'Da, javno na stranici', ne: 'Samo "po dogovoru"', dio: 'Dio njih da, dio ne'
+};
+const LOGO_LABEL = {
+  da: 'Klijent ima logo — pošalje',
+  ne: 'Treba mu novi logo (vidi Brand pakete)',
+  ideja: 'Ima ideju, nema logo'
+};
+const PAKET_DEF = {
+  vizit:    { naziv: 'Vizit',    title: '◆',    sub: 'Jedna stranica + kontakt forma', cijena: 450 },
+  standard: { naziv: 'Standard', title: '◆◆',   sub: 'Stranica + sistem + alat',      cijena: 800 },
+  pro:      { naziv: 'Pro',      title: '◆◆◆', sub: 'Sve iz Standard + admin tracker', cijena: 1400 },
+ 'ne-znam': { naziv: 'Nije izabran', title: '?', sub: 'Klijent nije siguran — razgovaramo', cijena: 0 }
+};
+const HOSTING_DEF = {
+  studio:  { naziv: 'Studio drži',    cijena: 400, tag: 'Auto-renewal · 6h support · mjesečni backup · custom email' },
+  klijent: { naziv: 'Klijent preuzima', cijena: 0,   tag: 'Studio out · klijent vodi sve sam · bez backup-a' }
+};
+const ADDON_LABEL = {
+  brand_spark: 'Brand Spark · 450 KM',
+  brand_story: 'Brand Story · 850 KM',
+  brand_cinema: 'Brand Cinema · 1.300 KM',
+  logo_standalone: 'Samo logo · 250 KM',
+  foto_sesija: 'Foto-sesija fizička · 250–400 KM',
+  godisnje_odrzavanje: 'Godišnje održavanje · 400 KM',
+  video_tutorijal: 'Video tutorijal · 150 KM',
+  backup_mjesecni: 'Mjesečni backup · 120 KM/god'
+};
+const COLOR_DEF = {
+  topla:     { name: 'Topla',     gradient: 'linear-gradient(135deg,#E5B575,#C8924A)' },
+  terakota:  { name: 'Terakota',  gradient: 'linear-gradient(135deg,#C57F5A,#8E4A1F)' },
+  ruzicasta: { name: 'Pudrasta',  gradient: 'linear-gradient(135deg,#F5C2C7,#D88898)' },
+  zelena:    { name: 'Žalfija',   gradient: 'linear-gradient(135deg,#7A9486,#4A5A3F)' },
+  plava:     { name: 'Modra',     gradient: 'linear-gradient(135deg,#5A7A92,#2C4A60)' },
+  tamna:     { name: 'Mocha',     gradient: 'linear-gradient(135deg,#3D2E20,#1F1812)' },
+  krem:      { name: 'Krem',      gradient: 'linear-gradient(135deg,#F6EEDF,#E5D4B8)' },
+  zlatna:    { name: 'Zlatna',    gradient: 'linear-gradient(135deg,#E5B575,#A06F2E)' }
+};
+
+// ── STATE ──
+let currentState = null;
+
+// ── HELPERS ──
+function $(id) { return document.getElementById(id); }
+function setText(id, value, fallbackEmpty) {
+  const el = $(id);
+  if (!el) return;
+  if (value === null || value === undefined || value === '') {
+    el.textContent = fallbackEmpty || '—';
+    el.classList.add('empty');
+  } else {
+    el.textContent = value;
+    el.classList.remove('empty');
+  }
+}
+function setHTML(id, html) {
+  const el = $(id);
+  if (el) el.innerHTML = html;
+}
+function setBlock(id, value) {
+  const el = $(id);
+  if (!el) return;
+  if (!value || value.trim() === '') {
+    el.textContent = 'Nije popunjeno.';
+    el.classList.add('empty');
+  } else {
+    el.textContent = value;
+    el.classList.remove('empty');
+  }
+}
+
+// ── RENDER FROM STATE ──
+function renderState(state) {
+  if (!state) {
+    document.body.dataset.empty = 'true';
+    return;
+  }
+  document.body.dataset.empty = 'false';
+  currentState = state;
+
+  const k = state.klijent || {};
+  const p = state.paket || {};
+  const pos = state.posao || {};
+  const v = state.vizual || {};
+  const pr = state.prica || {};
+  const sm = state.studio_meta || {};
+
+  // Header meta row
+  setText('metaKlijent', k.biznis || k.ime || '—');
+  setText('metaDatum', sm.datum_ulaza || formatDateFromIso(state._meta?.exportedAt) || '—');
+  const slug = (k.biznis || k.ime || 'biznis')
+    .toLowerCase()
+    .replace(/[čć]/g,'c').replace(/š/g,'s').replace(/ž/g,'z').replace(/đ/g,'dj')
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,20) || 'biznis';
+  $('metaSubdomena').textContent = sm.subdomena || `${slug}.ruke.ba`;
+
+  // Sekcija 01 — Klijent
+  setText('kKlijentIme', k.ime);
+  setText('kKlijentBiznis', k.biznis);
+  setText('kKlijentTelefon', k.telefon);
+  setText('kKlijentEmail', k.email);
+  setText('kKlijentGrad', [k.grad, k.adresa].filter(x=>x).join(' · '));
+  const tipDisplay = TIP_BIZNISA_LABEL[k.tip_biznisa] || k.tip_drugo || '';
+  setText('kKlijentTip', tipDisplay);
+  setText('kKlijentIskustvo', ISKUSTVO_LABEL[k.iskustvo] || '');
+  setText('kKlijentKanal', KANAL_LABEL[k.kontakt_kanal] || '');
+
+  // Sekcija 02 — Paket + hosting
+  const izbor = p.izbor || 'standard';
+  const def = PAKET_DEF[izbor] || PAKET_DEF['ne-znam'];
+  $('kPackName').textContent = 'PAKET — ' + (def.naziv || '—').toUpperCase();
+  $('kPackTitle').textContent = def.title;
+  $('kPackSub').textContent = def.sub;
+  $('kPackCijena').textContent = def.cijena ? `${def.cijena.toLocaleString('bs-BA')} KM` : '— KM';
+
+  // Hosting
+  const hostKey = p.hosting;
+  const hostBox = $('kHosting');
+  if (hostKey && HOSTING_DEF[hostKey]) {
+    const h = HOSTING_DEF[hostKey];
+    $('kHostingNaziv').textContent = h.naziv;
+    $('kHostingTag').textContent = h.tag;
+    $('kHostingCijena').textContent = h.cijena > 0 ? `${h.cijena} KM/god` : 'Uključeno';
+    hostBox.classList.remove('empty');
+  } else {
+    $('kHostingNaziv').textContent = 'Hosting nije izabran';
+    $('kHostingTag').textContent = 'Klijent treba da odabere model';
+    $('kHostingCijena').textContent = '—';
+    hostBox.classList.add('empty');
+  }
+
+  // Addons
+  const addons = p.addons || {};
+  const activeAddons = Object.keys(addons).filter(k => addons[k]);
+  const addonsEl = $('kAddons');
+  if (activeAddons.length === 0) {
+    addonsEl.classList.add('empty');
+    addonsEl.innerHTML = '<li>Nije izabran nijedan dodatak.</li>';
+  } else {
+    addonsEl.classList.remove('empty');
+    addonsEl.innerHTML = activeAddons
+      .map(key => `<li>${ADDON_LABEL[key] || key}</li>`)
+      .join('');
+  }
+
+  // Sekcija 03 — Posao
+  setBlock('kUsluge', pos.usluge);
+  setText('kCijeneJavno', CIJENE_LABEL[pos.cijene_javno] || '');
+  setText('kLokacija', LOKACIJA_LABEL[pos.lokacija_tip] || '');
+  setText('kRadnoVrijeme', pos.radno_vrijeme);
+
+  // Sekcija 04 — Priča
+  setBlock('kONama', pr.o_nama);
+  setBlock('kCime', pr.cime_se_isticemo);
+  setBlock('kFAQ', pr.faq);
+  setBlock('kProblem', pr.problem);
+  setBlock('kInspiracije', pr.inspiracije);
+
+  // Sekcija 05 — Vizual
+  setText('kLogoStatus', LOGO_LABEL[v.ima_logo] || '');
+  // Materijali status — depends on checklist
+  const cl = sm.checklist || {};
+  const matEl = $('kMaterijaliStatus');
+  const logoOk = !!cl.logo_done;
+  const fotoOk = !!cl.fotografije_primljene;
+  if (logoOk && fotoOk) {
+    matEl.innerHTML = '<span class="badge ok">Sve primljeno</span>';
+  } else if (logoOk || fotoOk) {
+    matEl.innerHTML = '<span class="badge todo">Djelimično — vidi Studio view</span>';
+  } else {
+    matEl.innerHTML = '<span class="badge empty">Čeka se od klijenta</span>';
+  }
+
+  // Boje
+  const boje = Array.isArray(v.boje) ? v.boje : [];
+  const bojeEl = $('kBoje');
+  if (boje.length === 0) {
+    bojeEl.innerHTML = '<span class="data-value empty">Nije izabrano. Studio će predložiti.</span>';
+  } else {
+    bojeEl.innerHTML = boje.map(b => {
+      const def = COLOR_DEF[b];
+      if (!def) return '';
+      return `<div class="color-chip">
+        <div class="color-chip-circle" style="background:${def.gradient}"></div>
+        <div class="color-chip-name">${def.name}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // Sekcija 06 — Napomene
+  setBlock('kNapomene', state.napomene);
+
+  // Studio meta — editable fields
+  setEditable('subdomena', sm.subdomena || `${slug}.ruke.ba`);
+  setEditable('ponuda_broj', sm.ponuda_broj || '');
+  setEditable('ponuda_datum', sm.ponuda_datum || '');
+  setEditable('interne_napomene', sm.interne_napomene || '');
+  $('sDatumUlaza').textContent = sm.datum_ulaza || formatDateFromIso(state._meta?.exportedAt) || '—';
+
+  // Checklist
+  document.querySelectorAll('.check-item').forEach(item => {
+    const key = item.dataset.check;
+    if (cl[key]) item.classList.add('done');
+    else item.classList.remove('done');
+  });
+
+  // Footer date
+  $('docFooterDate').textContent = formatDateNow();
+}
+
+function setEditable(key, value) {
+  const el = document.querySelector(`[data-key="${key}"]`);
+  if (el) el.textContent = value || '';
+}
+
+function formatDateFromIso(iso) {
+  if (!iso) return '';
+  try {
+    const d = new Date(iso);
+    return `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${d.getFullYear()}.`;
+  } catch(e) { return ''; }
+}
+function formatDateNow() {
+  const d = new Date();
+  return `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${d.getFullYear()}.`;
+}
+
+// ── GATHER (back to canonical, including studio edits) ──
+function gatherState() {
+  if (!currentState) return null;
+  const out = JSON.parse(JSON.stringify(currentState)); // deep clone
+
+  // Update _meta to reflect this stage
+  out._meta = {
+    ...out._meta,
+    version: 'ruke-state_v1',
+    exportedAt: new Date().toISOString(),
+    exportedBy: 'ruke-brief',
+    stage: 'brief-verified'
+  };
+
+  // Pull studio meta from DOM
+  if (!out.studio_meta) out.studio_meta = {};
+  out.studio_meta.subdomena = (document.querySelector('[data-key="subdomena"]')?.textContent || '').trim();
+  out.studio_meta.ponuda_broj = (document.querySelector('[data-key="ponuda_broj"]')?.textContent || '').trim();
+  out.studio_meta.ponuda_datum = (document.querySelector('[data-key="ponuda_datum"]')?.textContent || '').trim();
+  out.studio_meta.interne_napomene = (document.querySelector('[data-key="interne_napomene"]')?.textContent || '').trim();
+
+  // Checklist
+  if (!out.studio_meta.checklist) out.studio_meta.checklist = {};
+  document.querySelectorAll('.check-item').forEach(item => {
+    out.studio_meta.checklist[item.dataset.check] = item.classList.contains('done');
+  });
+
+  return out;
+}
+
+// ── EXPORT / IMPORT ──
+function exportState() {
+  const state = gatherState();
+  if (!state) {
+    toast('Nema podataka za izvoz. Učitaj JSON prvo.', 'err');
+    return;
+  }
+  const k = state.klijent || {};
+  const slug = (k.biznis || k.ime || 'klijent')
+    .toLowerCase()
+    .replace(/[čć]/g,'c').replace(/š/g,'s').replace(/ž/g,'z').replace(/đ/g,'dj')
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0, 30);
+  const date = new Date().toISOString().slice(0, 10);
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Ruke_${slug || 'klijent'}_${date}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Brief izvezen kao JSON');
+}
+
+function importState(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const state = JSON.parse(e.target.result);
+      if (!state._meta || !state._meta.version || !state._meta.version.startsWith('ruke-')) {
+        toast('Neispravan fajl — nije Ruke state', 'err');
+        return;
+      }
+      // If datum_ulaza not set, set from exportedAt
+      if (state.studio_meta && !state.studio_meta.datum_ulaza) {
+        state.studio_meta.datum_ulaza = formatDateFromIso(state._meta.exportedAt);
+      }
+      renderState(state);
+      cacheState();
+      toast('Brief uspješno učitan iz JSON-a');
+    } catch (err) {
+      toast('Greška: ' + err.message, 'err');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function resetForm() {
+  if (!confirm('Obrisati cijeli brief i kreni od nule?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  currentState = null;
+  location.reload();
+}
+
+// ── CACHE ──
+function cacheState() {
+  try {
+    const s = gatherState();
+    if (s) localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+  } catch (e) {}
+}
+function loadCache() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const state = JSON.parse(raw);
+      renderState(state);
+      return true;
+    }
+  } catch (e) {}
+  return false;
+}
+
+// ── VIEW TOGGLE ──
+function setView(view) {
+  document.body.dataset.view = view;
+  $('viewKlijent').classList.toggle('active', view === 'klijent');
+  $('viewStudio').classList.toggle('active', view === 'studio');
+  if (view === 'studio') toast('Studio view — sekcije ispod su interne');
+}
+
+// ── INTERACTIONS ──
+// Checklist click
+document.querySelectorAll('.check-item').forEach(item => {
+  item.addEventListener('click', () => {
+    item.classList.toggle('done');
+    cacheState();
+    // Re-render materials badge
+    if (currentState) {
+      currentState.studio_meta = currentState.studio_meta || {};
+      currentState.studio_meta.checklist = currentState.studio_meta.checklist || {};
+      currentState.studio_meta.checklist[item.dataset.check] = item.classList.contains('done');
+      // Update materials badge live
+      const cl = currentState.studio_meta.checklist;
+      const matEl = $('kMaterijaliStatus');
+      const logoOk = !!cl.logo_done;
+      const fotoOk = !!cl.fotografije_primljene;
+      if (logoOk && fotoOk) {
+        matEl.innerHTML = '<span class="badge ok">Sve primljeno</span>';
+      } else if (logoOk || fotoOk) {
+        matEl.innerHTML = '<span class="badge todo">Djelimično — vidi Studio view</span>';
+      } else {
+        matEl.innerHTML = '<span class="badge empty">Čeka se od klijenta</span>';
+      }
+    }
+  });
+});
+
+// Editable changes
+document.addEventListener('input', e => {
+  if (e.target.matches('[contenteditable="true"]')) cacheState();
+});
+
+// ── TOAST ──
+const toastEl = $('toast');
+let toastTimer;
+function toast(msg, type) {
+  toastEl.textContent = msg;
+  toastEl.style.background = type === 'err' ? '#B14A3E' : '#1F1812';
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2600);
+}
+
+// ── INIT ──
+const hadCache = loadCache();
+if (!hadCache) {
+  $('docFooterDate').textContent = formatDateNow();
+}
+
+// ── MICRO-INTERACTIONS: mouse-follow on check-items + pack-card ──
+document.querySelectorAll('.check-item, .pack-card, .hosting-display, .prose-block').forEach(el => {
+  el.addEventListener('mousemove', e => {
+    const r = el.getBoundingClientRect();
+    el.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
+    el.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
+  });
+});
+
+// Spring tick when checking off items
+document.querySelectorAll('.check-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const mark = item.querySelector('.check-mark');
+    if (mark) {
+      mark.style.animation = 'none';
+      void mark.offsetWidth; // reflow
+      mark.style.animation = 'check-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    }
+  });
+});
+</script>
+
+</body>
+</html>

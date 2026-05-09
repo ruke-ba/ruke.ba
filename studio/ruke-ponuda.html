@@ -1,0 +1,1949 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ponuda — Ruke malih biznisa</title>
+
+<!-- favicon: pretpostavlja logo.png u istom folderu (kvadratni, transparent) -->
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Caveat:wght@400;500;600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --cream:        #F6EEDF;
+  --cream-warm:   #EFE3CF;
+  --cream-deep:   #E5D4B8;
+
+  --ink:          #1F1812;
+  --ink-warm:     #3D2E20;
+  --ink-soft:     #6B5640;
+  --ink-faint:    #9B8868;
+
+  --honey:        #C8924A;
+  --honey-deep:   #A06F2E;
+  --honey-light:  #E5B575;
+
+  --umber:        #8E4A1F;
+  --umber-deep:   #6B3414;
+
+  --sage:         #6B7B5E;
+  --sage-deep:    #4A5A3F;
+
+  --rose-dust:    #C57F5A;
+
+  --rule:         rgba(61, 46, 32, 0.18);
+  --rule-strong:  rgba(61, 46, 32, 0.40);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: #E5D4B8;
+  background-image:
+    radial-gradient(circle at 30% 20%, rgba(200, 146, 74, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(107, 123, 94, 0.08) 0%, transparent 50%);
+  color: var(--ink);
+  font-family: 'Lora', Georgia, serif;
+  font-size: 11pt;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "kern", "liga", "onum";
+  min-height: 100vh;
+  padding: 30px 20px;
+}
+
+/* ── TOOLBAR (hidden in print) ── */
+.toolbar {
+  position: sticky;
+  top: 16px;
+  z-index: 50;
+  max-width: 800px;
+  margin: 0 auto 20px;
+  padding: 12px 18px;
+  background: rgba(31, 24, 18, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  color: var(--cream);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  font-family: 'Lora', sans-serif;
+}
+.toolbar .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--honey-light);
+  text-transform: uppercase;
+  margin-right: auto;
+}
+.tb-btn {
+  font-family: 'Lora', serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cream);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
+  padding: 7px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.tb-btn:hover {
+  background: rgba(229, 181, 117, 0.15);
+  border-color: var(--honey-light);
+  color: var(--honey-light);
+}
+.tb-btn.primary {
+  background: var(--honey);
+  border-color: var(--honey);
+  color: var(--ink);
+  font-weight: 600;
+}
+.tb-btn.primary:hover {
+  background: var(--honey-light);
+  border-color: var(--honey-light);
+  color: var(--ink);
+}
+
+.toast {
+  position: fixed;
+  bottom: 30px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: var(--cream);
+  padding: 12px 22px;
+  border-radius: 8px;
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  pointer-events: none;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-8px);
+}
+
+/* ── PAGE (A4 ratio) ── */
+.page {
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--cream);
+  padding: 60px 64px 50px;
+  box-shadow:
+    0 1px 3px rgba(0,0,0,0.08),
+    0 12px 36px rgba(0,0,0,0.10),
+    0 24px 60px rgba(0,0,0,0.06);
+  position: relative;
+  min-height: 1120px; /* A4 ratio */
+}
+.page::before {
+  /* subtle paper texture */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 0;
+}
+.page > * { position: relative; z-index: 1; }
+
+/* ── HEADER ── */
+.doc-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 30px;
+  align-items: start;
+  padding-bottom: 28px;
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 36px;
+}
+.brand-block {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+}
+/* ── BRAND BLOCK / HEADER ── */
+.brand-block { line-height: 1.2; }
+.brand-mark {
+  display: block;
+  max-width: 240px;
+  max-height: 70px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 2px 6px rgba(31, 24, 18, 0.06));
+}
+.brand-name {
+  font-size: 1.7rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  line-height: 1.1;
+}
+.brand-name em {
+  font-style: italic;
+  color: var(--honey-deep);
+  font-weight: 500;
+}
+.brand-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5pt;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--ink-soft);
+  margin-top: 6px;
+}
+.doc-meta {
+  text-align: right;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5pt;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+.doc-meta-label {
+  font-size: 8.5pt;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  display: block;
+}
+.doc-meta-value {
+  color: var(--ink);
+  font-weight: 500;
+  font-size: 11pt;
+  letter-spacing: 0.02em;
+}
+
+/* ── TITLE ── */
+.doc-title {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-size: 3rem;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.doc-title em {
+  font-style: italic;
+  color: var(--honey-deep);
+}
+.doc-subtitle {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 12pt;
+  color: var(--ink-soft);
+  margin-bottom: 36px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--rule);
+}
+
+/* ── SECTION ── */
+.s {
+  margin-bottom: 30px;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+.s-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.s-num {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 14pt;
+  color: var(--honey-deep);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.s-title {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-size: 16pt;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+  flex: 1;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 6px;
+}
+
+/* ── EDITABLE FIELD ── */
+[contenteditable="true"] {
+  outline: none;
+  background: rgba(229, 181, 117, 0.10);
+  padding: 1px 4px;
+  border-radius: 2px;
+  border-bottom: 1px dashed rgba(160, 111, 46, 0.3);
+  transition: background 0.2s;
+  cursor: text;
+  min-width: 30px;
+  display: inline-block;
+}
+[contenteditable="true"]:hover {
+  background: rgba(229, 181, 117, 0.18);
+}
+[contenteditable="true"]:focus {
+  background: rgba(229, 181, 117, 0.22);
+  border-bottom-color: var(--honey-deep);
+  border-bottom-style: solid;
+}
+[contenteditable="true"]:empty::before {
+  content: attr(data-placeholder);
+  color: var(--ink-faint);
+  font-style: italic;
+  pointer-events: none;
+}
+
+/* ── KLIJENT GRID ── */
+.client-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 32px;
+  font-family: 'Lora', serif;
+  font-size: 10.5pt;
+}
+.client-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-bottom: 1px dotted var(--rule);
+  padding-bottom: 8px;
+}
+.client-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8pt;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.client-value {
+  font-size: 11.5pt;
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* ── PACKAGE BOX ── */
+.pkg-box {
+  background: linear-gradient(135deg, rgba(229, 181, 117, 0.14) 0%, rgba(200, 146, 74, 0.08) 100%);
+  border: 1px solid var(--honey);
+  border-radius: 6px;
+  padding: 22px 26px;
+  position: relative;
+}
+.pkg-box::before {
+  content: '◆';
+  position: absolute;
+  top: 14px; right: 18px;
+  color: var(--honey-deep);
+  font-size: 14pt;
+}
+.pkg-name {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-size: 11pt;
+  font-weight: 500;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  margin-bottom: 4px;
+}
+.pkg-title {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-size: 24pt;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.pkg-subtitle {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 11pt;
+  color: var(--ink-soft);
+  margin-bottom: 14px;
+}
+.pkg-price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(160, 111, 46, 0.3);
+}
+.pkg-price-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9pt;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-soft);
+}
+.pkg-price {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-size: 28pt;
+  font-weight: 600;
+  color: var(--honey-deep);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.pkg-price small {
+  font-family: 'Lora', serif;
+  font-size: 11pt;
+  font-weight: 400;
+  color: var(--ink-soft);
+  font-style: italic;
+  margin-left: 4px;
+}
+
+/* ── HOSTING CHOICE ── */
+.hosting-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+.hosting-card {
+  position: relative;
+  padding: 16px 18px 18px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+.hosting-card:hover {
+  background: rgba(229, 181, 117, 0.08);
+  border-color: var(--honey);
+}
+.hosting-card.included {
+  background: linear-gradient(135deg, rgba(229, 181, 117, 0.16) 0%, rgba(200, 146, 74, 0.08) 100%);
+  border-color: var(--honey-deep);
+  border-width: 1.5px;
+}
+.hosting-card.included .hosting-mark {
+  color: var(--honey-deep);
+}
+.hosting-mark {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  font-size: 14pt;
+  color: var(--ink-faint);
+  line-height: 1;
+}
+.hosting-name {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-size: 15pt;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  margin-bottom: 2px;
+}
+.hosting-tag {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 9pt;
+  color: var(--ink-soft);
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+.hosting-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px;
+  font-family: 'Lora', serif;
+  font-size: 9.5pt;
+  color: var(--ink-warm);
+}
+.hosting-features li {
+  padding: 2px 0 2px 14px;
+  position: relative;
+  line-height: 1.45;
+}
+.hosting-features li::before {
+  content: '·';
+  position: absolute;
+  left: 4px;
+  color: var(--honey-deep);
+  font-weight: 700;
+}
+.hosting-features em {
+  font-style: italic;
+  color: var(--honey-deep);
+}
+.hosting-price {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-size: 18pt;
+  font-weight: 600;
+  color: var(--honey-deep);
+  padding-top: 10px;
+  border-top: 1px dashed rgba(160, 111, 46, 0.3);
+  letter-spacing: -0.015em;
+}
+.hosting-price small {
+  font-family: 'Lora', serif;
+  font-size: 9pt;
+  font-weight: 400;
+  color: var(--ink-soft);
+  font-style: italic;
+  margin-left: 3px;
+}
+.hosting-help {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 9.5pt;
+  color: var(--ink-soft);
+  margin-top: 12px;
+  line-height: 1.5;
+}
+.hosting-help strong {
+  font-weight: 600;
+  color: var(--honey-deep);
+  font-style: normal;
+}
+
+/* ── INCLUDES LIST ── */
+.includes-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 24px;
+  font-family: 'Lora', serif;
+  font-size: 10.5pt;
+}
+.includes-list li {
+  position: relative;
+  padding: 6px 0 6px 22px;
+  color: var(--ink-warm);
+  border-bottom: 1px dotted var(--rule);
+  line-height: 1.45;
+}
+.includes-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 5px;
+  color: var(--sage-deep);
+  font-weight: 700;
+  font-size: 11pt;
+}
+.includes-list li:last-child { border-bottom: none; }
+
+/* ── ADDONS TABLE ── */
+.addons-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Lora', serif;
+  font-size: 10.5pt;
+}
+.addons-table th {
+  text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5pt;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-weight: 500;
+  padding: 8px 0;
+  border-bottom: 2px solid var(--ink);
+}
+.addons-table th.right { text-align: right; }
+.addons-table td {
+  padding: 9px 0;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+.addons-table td.price {
+  text-align: right;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5pt;
+  color: var(--honey-deep);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.addons-table tr.included td:first-child {
+  color: var(--ink);
+  font-weight: 500;
+}
+.addons-table tr.included td:first-child::before {
+  content: '✓ ';
+  color: var(--sage-deep);
+  font-weight: 700;
+}
+.addons-table tr.excluded td { color: var(--ink-faint); }
+.addons-table tr.excluded td:first-child::before {
+  content: '○ ';
+  color: var(--ink-faint);
+}
+
+.addon-toggle {
+  cursor: pointer;
+  user-select: none;
+}
+.addon-toggle:hover td { background: rgba(229, 181, 117, 0.06); }
+
+/* ── PRICE BREAKDOWN ── */
+.totals {
+  margin-top: 16px;
+  padding: 18px 22px;
+  background: rgba(31, 24, 18, 0.04);
+  border-radius: 4px;
+  border-left: 3px solid var(--honey-deep);
+}
+.totals-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Lora', serif;
+  font-size: 10.5pt;
+  padding: 5px 0;
+  color: var(--ink-warm);
+}
+.totals-row.subtotal {
+  border-top: 1px solid var(--rule);
+  padding-top: 10px;
+  margin-top: 6px;
+}
+.totals-row.grand {
+  border-top: 2px solid var(--ink);
+  padding-top: 12px;
+  margin-top: 10px;
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-size: 16pt;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.totals-row.grand .num {
+  color: var(--honey-deep);
+  font-size: 22pt;
+}
+.totals-row .num {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* ── TIMELINE ── */
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.tl-step {
+  padding: 16px 18px;
+  border-right: 1px solid var(--rule);
+  position: relative;
+}
+.tl-step:last-child { border-right: none; }
+.tl-step::before {
+  content: '';
+  position: absolute;
+  top: 50%; right: -7px;
+  transform: translateY(-50%);
+  border-left: 7px solid var(--honey-light);
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  z-index: 2;
+}
+.tl-step:last-child::before { display: none; }
+.tl-step-num {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 11pt;
+  color: var(--honey-deep);
+  font-weight: 500;
+}
+.tl-step-title {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-size: 13pt;
+  font-weight: 600;
+  color: var(--ink);
+  margin-top: 2px;
+  margin-bottom: 4px;
+}
+.tl-step-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5pt;
+  color: var(--honey-deep);
+  font-weight: 500;
+}
+.tl-step-note {
+  font-family: 'Lora', serif;
+  font-size: 9pt;
+  color: var(--ink-soft);
+  font-style: italic;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+/* ── PAYMENT ── */
+.payment {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 6px;
+}
+.payment-card {
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+}
+.payment-card-num {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 12pt;
+  color: var(--honey-deep);
+  font-weight: 500;
+}
+.payment-card-amount {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-size: 22pt;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  line-height: 1;
+  margin: 4px 0;
+}
+.payment-card-when {
+  font-family: 'Lora', serif;
+  font-size: 10pt;
+  font-style: italic;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+
+/* ── TERMS ── */
+.terms {
+  font-family: 'Lora', serif;
+  font-size: 9.5pt;
+  color: var(--ink-warm);
+  line-height: 1.65;
+}
+.terms ul {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+}
+.terms ul li {
+  padding: 4px 0 4px 18px;
+  position: relative;
+}
+.terms ul li::before {
+  content: '·';
+  position: absolute;
+  left: 4px;
+  color: var(--honey-deep);
+  font-weight: 700;
+}
+
+/* ── SIGNATURE ── */
+.sig-block {
+  margin-top: 38px;
+  padding-top: 28px;
+  border-top: 2px solid var(--ink);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+}
+.sig-line {
+  font-family: 'Lora', serif;
+  font-size: 10pt;
+}
+.sig-line-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5pt;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 38px;
+}
+.sig-line-name {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-size: 13pt;
+  font-weight: 500;
+  color: var(--ink);
+  border-top: 1px solid var(--ink);
+  padding-top: 6px;
+}
+.sig-line-meta {
+  font-family: 'Lora', serif;
+  font-size: 9pt;
+  font-style: italic;
+  color: var(--ink-soft);
+  margin-top: 2px;
+}
+.sig-line-firm {
+  font-family: 'Lora', serif;
+  font-size: 9pt;
+  color: var(--honey-deep);
+  font-weight: 500;
+  margin-top: 3px;
+  letter-spacing: 0.01em;
+}
+.sig-line-firm em {
+  font-style: italic;
+  color: var(--ink-soft);
+  font-weight: 400;
+}
+
+/* ── DOC FOOTER ── */
+.doc-footer {
+  margin-top: 40px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: 'Lora', serif;
+  font-size: 9pt;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+.doc-footer .b {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-style: normal;
+  font-weight: 500;
+  color: var(--ink);
+}
+.doc-footer .footer-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.doc-footer .footer-mark {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  opacity: 0.55;
+  filter: drop-shadow(0 1px 2px rgba(31, 24, 18, 0.08));
+  flex-shrink: 0;
+  transition: opacity 0.3s var(--ease-out-quint);
+}
+.doc-footer .footer-mark:hover { opacity: 0.85; }
+
+/* ── PRINT MODE ── */
+@media print {
+  body {
+    background: white;
+    padding: 0;
+  }
+  body::before { display: none; }
+  .toolbar, .toast { display: none !important; }
+  .page {
+    box-shadow: none;
+    margin: 0;
+    padding: 24mm 22mm;
+    max-width: 100%;
+    min-height: auto;
+  }
+  .page::before { display: none; }
+  [contenteditable="true"] {
+    background: transparent !important;
+    border-bottom: none !important;
+    padding: 0 !important;
+  }
+  [contenteditable="true"]:empty::before { display: none; }
+  .s { page-break-inside: avoid; }
+}
+
+@page {
+  size: A4;
+  margin: 14mm;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 720px) {
+  body { padding: 12px; font-size: 11pt; }
+  .toolbar { padding: 10px 14px; }
+  .tb-btn { font-size: 12px; padding: 6px 10px; }
+  .toolbar .label { font-size: 10px; width: 100%; margin-bottom: 4px; }
+  .page { padding: 30px 24px; }
+  .doc-header { grid-template-columns: 1fr; gap: 16px; }
+  .doc-meta { text-align: left; }
+  .doc-title { font-size: 2rem; }
+  .client-grid { grid-template-columns: 1fr; gap: 12px; }
+  .timeline { grid-template-columns: 1fr; }
+  .tl-step { border-right: none; border-bottom: 1px solid var(--rule); }
+  .tl-step::before { display: none; }
+  .payment, .sig-block, .includes-list { grid-template-columns: 1fr; gap: 12px; }
+  .pkg-price { font-size: 22pt; }
+}
+/* ════════════════════════════════════════════════════════════════════
+   LIQUID GLASS DESIGN SYSTEM v1 — Apple-inspired glassmorphism
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --glass-bg:          rgba(255, 252, 245, 0.55);
+  --glass-bg-strong:   rgba(255, 252, 245, 0.78);
+  --glass-bg-tint:     rgba(229, 181, 117, 0.10);
+  --glass-bg-warm:     rgba(229, 181, 117, 0.18);
+  --glass-border:      rgba(255, 255, 255, 0.65);
+  --glass-border-soft: rgba(255, 255, 255, 0.4);
+  --glass-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -1px 0 rgba(31, 24, 18, 0.04),
+    0 1px 2px rgba(31, 24, 18, 0.04),
+    0 8px 24px rgba(31, 24, 18, 0.06);
+  --glass-shadow-hover:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -1px 0 rgba(31, 24, 18, 0.04),
+    0 2px 4px rgba(31, 24, 18, 0.06),
+    0 14px 36px rgba(160, 111, 46, 0.14),
+    0 0 0 1px rgba(229, 181, 117, 0.22);
+  --glass-blur:        blur(14px) saturate(180%);
+  --glass-blur-strong: blur(24px) saturate(200%);
+
+  --ease-spring:       cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-quint:    cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-cubic: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* ── Ambient drifting orbs ── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 12% 18%, rgba(229, 181, 117, 0.14) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 35% at 88% 82%, rgba(122, 148, 134, 0.10) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 50% 100%, rgba(201, 125, 122, 0.07) 0%, transparent 70%);
+  animation: ambient-drift 28s ease-in-out infinite alternate;
+}
+@keyframes ambient-drift {
+  0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+  50%  { transform: translate(2%, -1%) scale(1.04); opacity: 0.85; }
+  100% { transform: translate(-1%, 1%) scale(0.96); opacity: 1; }
+}
+
+/* Article appear on load */
+article {
+  position: relative;
+  z-index: 1;
+  animation: doc-appear 0.8s var(--ease-out-quint);
+}
+@keyframes doc-appear {
+  from { opacity: 0; transform: translateY(16px) scale(0.99); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── TOOLBAR (enhanced liquid glass) ── */
+.toolbar {
+  background: rgba(31, 24, 18, 0.72) !important;
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.20),
+    0 1px 2px rgba(31, 24, 18, 0.20),
+    0 12px 36px rgba(31, 24, 18, 0.30),
+    0 0 0 1px rgba(229, 181, 117, 0.10);
+  animation: toolbar-slide-in 0.55s var(--ease-spring) 0.1s backwards;
+}
+@keyframes toolbar-slide-in {
+  from { opacity: 0; transform: translate(-50%, -20px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+.toolbar button, .toolbar label {
+  transition: all 0.3s var(--ease-out-quint) !important;
+  position: relative;
+  overflow: hidden;
+}
+.toolbar button:hover, .toolbar label:hover {
+  transform: translateY(-1px);
+}
+.toolbar button:active, .toolbar label:active {
+  transform: translateY(0);
+}
+
+/* ── PACKAGE BOX ── */
+.pkg-box {
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  background: linear-gradient(135deg,
+    rgba(229, 181, 117, 0.20) 0%,
+    rgba(200, 146, 74, 0.10) 100%) !important;
+  border: 1px solid rgba(229, 181, 117, 0.40);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.60),
+    inset 0 -1px 0 rgba(160, 111, 46, 0.10),
+    0 4px 14px rgba(160, 111, 46, 0.10),
+    0 1px 2px rgba(31, 24, 18, 0.04);
+  transition: all 0.4s var(--ease-out-quint);
+}
+.pkg-box:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    0 8px 28px rgba(160, 111, 46, 0.18),
+    0 0 0 1px rgba(229, 181, 117, 0.50);
+  transform: translateY(-1px);
+}
+
+/* ── HOSTING CARDS ── */
+.hosting-card {
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  background: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border-soft);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    0 1px 2px rgba(31, 24, 18, 0.03);
+  transition:
+    transform 0.32s var(--ease-out-quint),
+    box-shadow 0.32s var(--ease-out-quint),
+    background 0.28s var(--ease-out-quint),
+    border-color 0.28s ease !important;
+  position: relative;
+  overflow: hidden;
+}
+.hosting-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at top,
+    rgba(255, 255, 255, 0.35) 0%,
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.hosting-card:hover {
+  background: var(--glass-bg-strong) !important;
+  border-color: rgba(229, 181, 117, 0.42);
+  transform: translateY(-3px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    0 12px 32px rgba(160, 111, 46, 0.14),
+    0 0 0 1px rgba(229, 181, 117, 0.30);
+}
+.hosting-card:hover::before { opacity: 1; }
+.hosting-card.included {
+  background: linear-gradient(135deg,
+    rgba(229, 181, 117, 0.22) 0%,
+    rgba(200, 146, 74, 0.10) 100%) !important;
+  border-color: var(--honey-deep);
+  border-width: 1.5px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.70),
+    inset 0 -1px 0 rgba(160, 111, 46, 0.10),
+    0 6px 22px rgba(160, 111, 46, 0.18),
+    0 0 0 1px rgba(229, 181, 117, 0.36);
+}
+.hosting-card.included .hosting-mark {
+  animation: dot-pulse 2.4s ease-in-out infinite;
+}
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.7; transform: scale(1.18); }
+}
+
+/* ── ADDONS TABLE rows (glass tint on hover) ── */
+.addons-table tr.addon-toggle {
+  transition: all 0.28s var(--ease-out-quint);
+}
+.addons-table tr.addon-toggle:hover td {
+  background: rgba(229, 181, 117, 0.10) !important;
+  backdrop-filter: blur(8px);
+}
+.addons-table tr.addon-toggle.included {
+  background: rgba(122, 148, 134, 0.06);
+}
+
+/* ── TOTALS (glass surface) ── */
+.totals {
+  background: linear-gradient(135deg,
+    rgba(255, 252, 245, 0.65) 0%,
+    rgba(229, 181, 117, 0.08) 100%) !important;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-left: 3px solid var(--honey-deep);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.60),
+    0 4px 18px rgba(31, 24, 18, 0.06);
+}
+.totals-row.grand .num {
+  background: linear-gradient(135deg, var(--honey-deep) 0%, var(--umber) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: all 0.4s var(--ease-out-quint);
+}
+
+/* ── TIMELINE STEPS ── */
+.timeline {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border-soft);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.50),
+    0 2px 8px rgba(31, 24, 18, 0.04);
+}
+.tl-step {
+  transition: background 0.3s ease;
+}
+.tl-step:hover {
+  background: rgba(229, 181, 117, 0.08);
+}
+
+/* ── PAYMENT CARDS ── */
+.payment-card {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border-soft);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    0 2px 8px rgba(31, 24, 18, 0.04);
+  transition: all 0.32s var(--ease-out-quint);
+}
+.payment-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    0 8px 24px rgba(160, 111, 46, 0.12);
+}
+
+/* ── INCLUDES LIST (subtle hover on items) ── */
+.includes-list li {
+  transition: all 0.24s ease;
+  border-radius: 4px;
+  padding-left: 26px;
+}
+.includes-list li:hover {
+  background: rgba(229, 181, 117, 0.08);
+  padding-left: 30px;
+}
+
+/* ── EDITABLE FIELDS (glass focus) ── */
+[contenteditable="true"]:focus {
+  background: rgba(255, 255, 255, 0.90) !important;
+  box-shadow:
+    inset 0 0 0 1px var(--honey-deep),
+    0 0 0 4px rgba(200, 146, 74, 0.14);
+  border-radius: 4px;
+}
+
+/* ── TOAST (refined glass) ── */
+.toast {
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(31, 24, 18, 0.88) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 12px 32px rgba(31, 24, 18, 0.30);
+}
+
+/* ── PRINT MODE: disable all glass ── */
+@media print {
+  body::after { display: none; }
+  .toolbar { display: none; }
+  .pkg-box, .hosting-card, .totals, .timeline, .payment-card, .toast {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: white !important;
+    box-shadow: none !important;
+    border-color: rgba(0, 0, 0, 0.15) !important;
+  }
+  .hosting-card.included {
+    background: rgba(229, 181, 117, 0.10) !important;
+    border-color: rgba(160, 111, 46, 0.40) !important;
+  }
+  .totals { border-left: 3px solid var(--honey-deep) !important; }
+  article { animation: none !important; }
+}
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ── TOOLBAR ── -->
+<div class="toolbar" id="toolbar">
+  <div class="label">Ponuda — alat za uređivanje</div>
+  <button class="tb-btn" onclick="exportState()" title="Sačuvaj sve podatke kao JSON fajl">⬇ Export</button>
+  <button class="tb-btn" onclick="document.getElementById('importFile').click()" title="Vrati ranije sačuvane podatke">⬆ Import</button>
+  <input type="file" id="importFile" accept=".json" style="display:none" onchange="importState(this.files[0])">
+  <button class="tb-btn" onclick="resetForm()" title="Obriši sve i kreni od nule">↻ Resetuj</button>
+  <button class="tb-btn primary" onclick="window.print()" title="Otvori print dialog za PDF">🖨 Print / PDF</button>
+</div>
+
+<!-- ── DOCUMENT PAGE ── -->
+<article class="page" id="page">
+
+  <!-- HEADER -->
+  <header class="doc-header">
+    <div class="brand-block">
+      <!-- header-logo.png — horizontal lockup, ~720×180, transparent PNG, isti folder -->
+      <img class="brand-mark" src="header-logo.png" alt="Ruke malih biznisa" onerror="this.style.display='none'">
+      <div class="brand-name">Ruke <em>malih</em> biznisa</div>
+      <div class="brand-tag">#RukeMalihBiznisa · ruke.ba</div>
+    </div>
+    <div class="doc-meta">
+      <span class="doc-meta-label">Broj ponude</span>
+      <span class="doc-meta-value" contenteditable="true" data-key="ponuda_broj" data-placeholder="2026-001">2026-001</span><br>
+      <span class="doc-meta-label" style="margin-top:8px">Datum</span>
+      <span class="doc-meta-value" contenteditable="true" data-key="ponuda_datum" data-placeholder="dd.mm.gggg">02.05.2026.</span>
+    </div>
+  </header>
+
+  <!-- TITLE -->
+  <h1 class="doc-title">Ponuda za <em><span contenteditable="true" data-key="klijent_kratko" data-placeholder="ime klijenta">Diamond peglanje</span></em></h1>
+  <p class="doc-subtitle">Digitalni paket — stranica, sistem za naručivanje, alat za pregled.</p>
+
+  <!-- ─────── 1. KLIJENT ─────── -->
+  <section class="s">
+    <div class="s-head">
+      <span class="s-num">№ 01</span>
+      <h2 class="s-title">Klijent</h2>
+    </div>
+    <div class="client-grid">
+      <div class="client-row">
+        <span class="client-label">Vlasnica / vlasnik</span>
+        <span class="client-value" contenteditable="true" data-key="klijent_ime" data-placeholder="Ime i prezime">Mevlida Mehić</span>
+      </div>
+      <div class="client-row">
+        <span class="client-label">Naziv biznisa</span>
+        <span class="client-value" contenteditable="true" data-key="klijent_biznis" data-placeholder="Naziv">Diamond peglanje</span>
+      </div>
+      <div class="client-row">
+        <span class="client-label">Telefon</span>
+        <span class="client-value" contenteditable="true" data-key="klijent_telefon" data-placeholder="0XX XXX XXX">062 090 016</span>
+      </div>
+      <div class="client-row">
+        <span class="client-label">E-mail</span>
+        <span class="client-value" contenteditable="true" data-key="klijent_email" data-placeholder="email@adresa.ba">—</span>
+      </div>
+      <div class="client-row">
+        <span class="client-label">Adresa / grad</span>
+        <span class="client-value" contenteditable="true" data-key="klijent_grad" data-placeholder="grad, opština">Ilidža, Sarajevo</span>
+      </div>
+      <div class="client-row">
+        <span class="client-label">Tip biznisa</span>
+        <span class="client-value" contenteditable="true" data-key="klijent_tip" data-placeholder="frizer / peglara / ...">Peglanje rublja</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────── 2. PAKET ─────── -->
+  <section class="s">
+    <div class="s-head">
+      <span class="s-num">№ 02</span>
+      <h2 class="s-title">Paket</h2>
+    </div>
+    <div class="pkg-box">
+      <div class="pkg-name" contenteditable="true" data-key="paket_naziv" data-placeholder="Vizit / Standard / Pro">Standard</div>
+      <div class="pkg-title" contenteditable="true" data-key="paket_title" data-placeholder="◆◆">◆◆</div>
+      <div class="pkg-subtitle" contenteditable="true" data-key="paket_sub" data-placeholder="kratak opis">Stranica + sistem + alat</div>
+      <div class="pkg-price-row">
+        <span class="pkg-price-label">Cijena paketa</span>
+        <span class="pkg-price"><span contenteditable="true" data-key="paket_cijena" data-placeholder="800">800</span><small>KM</small></span>
+      </div>
+    </div>
+
+    <!-- HOSTING -->
+    <div class="hosting-row">
+      <div class="hosting-card included" data-hosting="studio" data-price="400">
+        <div class="hosting-mark">●</div>
+        <div class="hosting-name">Studio drži</div>
+        <div class="hosting-tag">preporučeno · auto-renewal · klijent može migrirati kada želi</div>
+        <ul class="hosting-features">
+          <li>Netlify nalog kod studija</li>
+          <li>Mjesečni backup admin dijela</li>
+          <li>6h podrške kroz godinu</li>
+          <li>Custom email <em>kontakt@biznis.ruke.ba</em></li>
+        </ul>
+        <div class="hosting-price">400 <small>KM/god</small></div>
+      </div>
+      <div class="hosting-card excluded" data-hosting="klijent" data-price="0">
+        <div class="hosting-mark">○</div>
+        <div class="hosting-name">Sve preuzimam</div>
+        <div class="hosting-tag">jednokratno · klijent vodi sve sam</div>
+        <ul class="hosting-features">
+          <li>Netlify nalog na klijentu</li>
+          <li>Kredencijali predani</li>
+          <li>Bez backup-a / podrške</li>
+          <li>Studio out nakon predaje</li>
+        </ul>
+        <div class="hosting-price">0 <small>KM</small></div>
+      </div>
+    </div>
+    <p class="hosting-help">
+      <em>Klikni karticu da odabereš.</em> Stranica se nalazi na <strong>biznis.ruke.ba</strong> u oba slučaja —
+      razlika je ko vodi računa o backup-u i podršci kroz godinu.
+    </p>
+  </section>
+
+  <!-- ─────── 3. ŠTA JE UKLJUČENO ─────── -->
+  <section class="s">
+    <div class="s-head">
+      <span class="s-num">№ 03</span>
+      <h2 class="s-title">Šta je uključeno</h2>
+    </div>
+    <ul class="includes-list" contenteditable="true" data-key="ukljuceno_lista">
+      <li>Web stranica · jedna stranica</li>
+      <li>Booking forma sa terminima</li>
+      <li>Google Calendar integracija</li>
+      <li>"Kako radi" + FAQ sekcija</li>
+      <li>Dizajn loga (3 varijante)</li>
+      <li>Paleta boja + tipografija</li>
+      <li>Galerija fotografija (do 20)</li>
+      <li>Lista klijenata + historija</li>
+      <li>WhatsApp dugme + deep-link</li>
+      <li>Hosting + SSL · doživotno</li>
+      <li>Dvije runde izmjena</li>
+      <li>Handoff sastanak (45 min)</li>
+    </ul>
+  </section>
+
+  <!-- ─────── 4. ADD-ONS ─────── -->
+  <section class="s">
+    <div class="s-head">
+      <span class="s-num">№ 04</span>
+      <h2 class="s-title">Dodaci</h2>
+    </div>
+    <p style="font-family:'Lora',serif;font-style:italic;font-size:10pt;color:var(--ink-soft);margin-bottom:14px;">
+      Klikni red da uključiš ili isključiš stavku — total se sam preračunava.
+    </p>
+    <table class="addons-table">
+      <thead>
+        <tr>
+          <th>Dodatak</th>
+          <th>Opis</th>
+          <th class="right">Cijena</th>
+        </tr>
+      </thead>
+      <tbody id="addonsBody">
+        <tr class="addon-toggle excluded" data-price="450" data-key="brand_spark">
+          <td>Brand Spark</td>
+          <td>Logo (3 verzije) + paleta + 5 IG mockup-a</td>
+          <td class="price">450 KM</td>
+        </tr>
+        <tr class="addon-toggle excluded" data-price="850" data-key="brand_story">
+          <td>Brand Story</td>
+          <td>Brand Spark + 10-slide carousel + Story šabloni + WhatsApp launch</td>
+          <td class="price">850 KM</td>
+        </tr>
+        <tr class="addon-toggle excluded" data-price="1300" data-key="brand_cinema">
+          <td>Brand Cinema</td>
+          <td>Brand Story + 2 carousela + Reel + brand video + 3 lifestyle scene</td>
+          <td class="price">1.300 KM</td>
+        </tr>
+        <tr class="addon-toggle excluded" data-price="250" data-key="logo_standalone">
+          <td>Samo logo</td>
+          <td>3 verzije + paleta (ako ne ide brand paket)</td>
+          <td class="price">250 KM</td>
+        </tr>
+        <tr class="addon-toggle excluded" data-price="300" data-key="foto_sesija">
+          <td>Foto-sesija fizička</td>
+          <td>1–2h, 15–20 obrađenih slika · cijena na upit (250–400)</td>
+          <td class="price">na upit</td>
+        </tr>
+        <tr class="addon-toggle excluded" data-price="150" data-key="video_tutorijal">
+          <td>Video tutorijal</td>
+          <td>30 min snimljen, prilagođen tvojoj stranici</td>
+          <td class="price">150 KM</td>
+        </tr>
+        <tr class="addon-toggle excluded" data-price="400" data-key="godisnje_odrzavanje">
+          <td>Godišnje održavanje</td>
+          <td>Samo za "Sve preuzimam" — 6h rada kroz godinu</td>
+          <td class="price">400 KM</td>
+        </tr>
+        <tr class="addon-toggle excluded" data-price="120" data-key="backup_mjesecni">
+          <td>Mjesečni backup (12 mj)</td>
+          <td>Samo za "Sve preuzimam" — 10 KM × 12 mj</td>
+          <td class="price">120 KM</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="totals">
+      <div class="totals-row">
+        <span>Paket</span>
+        <span class="num"><span id="totPaket">800</span> KM</span>
+      </div>
+      <div class="totals-row">
+        <span>Hosting · <span id="totHostingLabel">Studio drži (godina prva)</span></span>
+        <span class="num"><span id="totHosting">400</span> KM</span>
+      </div>
+      <div class="totals-row subtotal">
+        <span>Dodaci</span>
+        <span class="num"><span id="totDodaci">0</span> KM</span>
+      </div>
+      <div class="totals-row grand">
+        <span>Ukupno</span>
+        <span class="num"><span id="totUkupno">1200</span> KM</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────── 5. TIMELINE ─────── -->
+  <section class="s">
+    <div class="s-head">
+      <span class="s-num">№ 05</span>
+      <h2 class="s-title">Vremenski okvir</h2>
+    </div>
+    <div class="timeline">
+      <div class="tl-step">
+        <div class="tl-step-num">i.</div>
+        <div class="tl-step-title">Onboarding</div>
+        <div class="tl-step-date" contenteditable="true" data-key="tl_1_datum" data-placeholder="dd.mm">05.05 — 12.05</div>
+        <div class="tl-step-note">Ti popunjavaš upitnik, šalješ slike i logo (ako imaš)</div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-step-num">ii.</div>
+        <div class="tl-step-title">Izgradnja</div>
+        <div class="tl-step-date" contenteditable="true" data-key="tl_2_datum" data-placeholder="dd.mm">12.05 — 26.05</div>
+        <div class="tl-step-note">Mi sklapamo stranicu i sistem · 2 runde izmjena</div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-step-num">iii.</div>
+        <div class="tl-step-title">Predaja</div>
+        <div class="tl-step-date" contenteditable="true" data-key="tl_3_datum" data-placeholder="dd.mm">26.05 — 28.05</div>
+        <div class="tl-step-note">Handoff sastanak · pisani vodič · stranica je tvoja</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────── 6. PLAĆANJE ─────── -->
+  <section class="s">
+    <div class="s-head">
+      <span class="s-num">№ 06</span>
+      <h2 class="s-title">Plaćanje</h2>
+    </div>
+    <div class="payment">
+      <div class="payment-card">
+        <div class="payment-card-num">prvi dio · 50%</div>
+        <div class="payment-card-amount"><span id="pay1">400</span> KM</div>
+        <div class="payment-card-when">na početku rada (poslije onboarding-a)</div>
+      </div>
+      <div class="payment-card">
+        <div class="payment-card-num">drugi dio · 50%</div>
+        <div class="payment-card-amount"><span id="pay2">400</span> KM</div>
+        <div class="payment-card-when">na predaju (handoff sastanak)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────── 7. UVJETI ─────── -->
+  <section class="s">
+    <div class="s-head">
+      <span class="s-num">№ 07</span>
+      <h2 class="s-title">Uvjeti</h2>
+    </div>
+    <div class="terms">
+      <ul>
+        <li>Stranica se postavlja na <em>biznis.ruke.ba</em> sa SSL-om — bez troška domene za klijenta. Migracija na vlastitu <em>.ba</em> domenu kasnije: 80 KM jednokratno.</li>
+        <li><strong>Studio drži (400 KM/god):</strong> auto-renewal, klijent može migrirati u bilo kojem trenutku, mjesečni backup uključen, 6h podrške godišnje. Preko 6h: 80 KM/h.</li>
+        <li><strong>Sve preuzimam:</strong> klijent dobija Netlify nalog na svoje ime, kredencijale, custom email — sve. Studio out poslije predaje. Nema backup-a osim ako se uzme kao addon (10 KM/mj).</li>
+        <li>U cijenu su uključene <strong>dvije runde izmjena</strong>. Treća runda i dalje: 80 KM/h, minimum 1h.</li>
+        <li>Garancija na bug-ove 30 dana od predaje. "Ne sviđa mi se" nije bug.</li>
+        <li>Plaćanje 50/50 — pola na početku, pola na predaju. Bez plaćanja unaprijed u cijelosti.</li>
+        <li>Klijent je vlasnik svog sadržaja, slika i podataka. Stranica se može prebaciti na drugi hosting bilo kada.</li>
+        <li>Ponuda važi <span contenteditable="true" data-key="vazenje" data-placeholder="14">14</span> dana od datuma izdavanja.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ─────── 8. POTPISI ─────── -->
+  <section class="s sig-block">
+    <div class="sig-line">
+      <div class="sig-line-label">Klijent</div>
+      <div class="sig-line-name" contenteditable="true" data-key="sig_klijent" data-placeholder="Ime i prezime">Mevlida Mehić</div>
+      <div class="sig-line-meta">datum: <span contenteditable="true" data-key="sig_datum_k" data-placeholder="dd.mm.gggg">_______________</span></div>
+    </div>
+    <div class="sig-line">
+      <div class="sig-line-label">Studio</div>
+      <div class="sig-line-name" contenteditable="true" data-key="sig_studio" data-placeholder="Ime">Edin Hasagić</div>
+      <div class="sig-line-firm">Ruke malih biznisa</div>
+      <div class="sig-line-meta">datum: <span contenteditable="true" data-key="sig_datum_s" data-placeholder="dd.mm.gggg">02.05.2026.</span></div>
+    </div>
+  </section>
+
+  <!-- DOC FOOTER -->
+  <footer class="doc-footer">
+    <div class="footer-left">
+      <!-- logo.png — square mark, ~512×512, transparent PNG, isti folder -->
+      <img class="footer-mark" src="logo.png" alt="" onerror="this.style.display='none'">
+      <div>
+        <span class="b">Ruke malih biznisa</span><br>
+        <em>zdravo@ruke.ba · +387 63 918 666 · Sarajevo, BiH</em>
+      </div>
+    </div>
+    <div>
+      <em>ponuda izdata na <em>ruke.ba</em></em><br>
+      <em>#RukeMalihBiznisa</em>
+    </div>
+  </footer>
+
+</article>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── STATE PERSISTENCE (canonical Ruke schema v1) ──
+const STATE_VERSION = 'ruke-state_v1';
+const STORAGE_KEY = 'ruke-ponuda-cache';
+const PONUDA_COUNTER_KEY = 'ruke-ponuda-counter';
+
+// Canonical price tables (mirror ruke-schema.md §5)
+const PAKETI = {
+  vizit:    { naziv: 'Vizit',    cijena: 450,  oznaka: '◆',     sub: 'Jednostranica + kontakt' },
+  standard: { naziv: 'Standard', cijena: 800,  oznaka: '◆◆',    sub: 'Stranica + sistem + alat' },
+  pro:      { naziv: 'Pro',      cijena: 1400, oznaka: '◆◆◆',  sub: 'Sve iz Standard + admin tracker' }
+};
+const HOSTING = {
+  studio:  { naziv: 'Studio drži', cijena: 400, label: 'Studio drži (godina prva)' },
+  klijent: { naziv: 'Sve preuzimam', cijena: 0, label: 'Klijent preuzima (jednokratno)' }
+};
+const TIMELINE_DAYS = { vizit: 10, standard: 14, pro: 28 };
+const TIP_BIZNISA_LABEL = {
+  peglanje: 'Peglanje rublja', frizer: 'Frizerski salon', manikir: 'Manikir / pedikir',
+  kozmetika: 'Kozmetički salon', estetika: 'Trepavice / obrve / šminka',
+  snajderica: 'Šnajderica / krojač', ciscenje: 'Čišćenje / spremačica',
+  catering: 'Catering / kolači / torte', masaza: 'Masaže / fizio / wellness',
+  majstor: 'Majstor', instrukcije: 'Instrukcije / časovi'
+};
+
+// ── GATHER / APPLY (canonical) ──
+function gatherState() {
+  const state = {
+    _meta: {
+      version: STATE_VERSION,
+      exportedAt: new Date().toISOString(),
+      exportedBy: 'ruke-ponuda',
+      stage: 'ponuda-final'
+    },
+    klijent: {
+      ime:      getText('klijent_ime'),
+      biznis:   getText('klijent_biznis'),
+      telefon:  getText('klijent_telefon'),
+      email:    getText('klijent_email'),
+      grad:     getText('klijent_grad'),
+      tip_biznisa_display: getText('klijent_tip')
+    },
+    paket: {
+      naziv:   getText('paket_naziv'),
+      title:   getText('paket_title'),
+      sub:     getText('paket_sub'),
+      cijena:  parseFloat((getText('paket_cijena') || '0').replace(/[^\d.]/g, '')) || 0,
+      hosting: getActiveHosting(),
+      addons: gatherAddons()
+    },
+    studio_meta: {
+      ponuda_broj:  getText('ponuda_broj'),
+      ponuda_datum: getText('ponuda_datum'),
+      vazenje:      getText('vazenje'),
+      sig_klijent:  getText('sig_klijent'),
+      sig_studio:   getText('sig_studio'),
+      sig_datum_k:  getText('sig_datum_k'),
+      sig_datum_s:  getText('sig_datum_s')
+    },
+    timeline: {
+      step1: getText('tl_1_datum'),
+      step2: getText('tl_2_datum'),
+      step3: getText('tl_3_datum')
+    },
+    ukljuceno: getIncludesHTML()
+  };
+  return state;
+}
+
+function getText(key) {
+  const el = document.querySelector(`[data-key="${key}"]`);
+  return el ? (el.textContent || '').trim() : '';
+}
+
+function setText(key, value) {
+  const el = document.querySelector(`[data-key="${key}"]`);
+  if (el && value !== undefined && value !== null && value !== '') {
+    el.textContent = value;
+  }
+}
+
+function getIncludesHTML() {
+  const inc = document.querySelector('.includes-list[contenteditable="true"]');
+  return inc ? inc.innerHTML : '';
+}
+
+function getActiveHosting() {
+  const card = document.querySelector('.hosting-card.included');
+  return card ? card.dataset.hosting : 'studio';
+}
+
+function gatherAddons() {
+  const out = {};
+  document.querySelectorAll('.addon-toggle').forEach(row => {
+    const k = row.dataset.key;
+    if (k) out[k] = row.classList.contains('included');
+  });
+  return out;
+}
+
+function applyState(state) {
+  if (!state) return;
+
+  // CASE 1: Import from onboarding (canonical, exportedBy=ruke-onboarding)
+  if (state._meta && state._meta.exportedBy === 'ruke-onboarding') {
+    applyOnboardingState(state);
+    return;
+  }
+
+  // CASE 2: Re-import of own ponuda state
+  if (state.klijent) {
+    setText('klijent_ime',     state.klijent.ime);
+    setText('klijent_biznis',  state.klijent.biznis);
+    setText('klijent_telefon', state.klijent.telefon);
+    setText('klijent_email',   state.klijent.email);
+    setText('klijent_grad',    state.klijent.grad);
+    setText('klijent_tip',     state.klijent.tip_biznisa_display);
+    setText('klijent_kratko',  state.klijent.biznis || state.klijent.ime);
+  }
+  if (state.paket) {
+    setText('paket_naziv', state.paket.naziv);
+    setText('paket_title', state.paket.title);
+    setText('paket_sub',   state.paket.sub);
+    if (state.paket.cijena) setText('paket_cijena', state.paket.cijena);
+    if (state.paket.hosting) setHosting(state.paket.hosting);
+    if (state.paket.addons) {
+      Object.keys(state.paket.addons).forEach(k => {
+        const row = document.querySelector(`.addon-toggle[data-key="${k}"]`);
+        if (row) {
+          if (state.paket.addons[k]) {
+            row.classList.add('included'); row.classList.remove('excluded');
+          } else {
+            row.classList.remove('included'); row.classList.add('excluded');
+          }
+        }
+      });
+    }
+  }
+  if (state.studio_meta) {
+    setText('ponuda_broj',  state.studio_meta.ponuda_broj);
+    setText('ponuda_datum', state.studio_meta.ponuda_datum);
+    setText('vazenje',      state.studio_meta.vazenje);
+    setText('sig_klijent',  state.studio_meta.sig_klijent);
+    setText('sig_studio',   state.studio_meta.sig_studio);
+    setText('sig_datum_k',  state.studio_meta.sig_datum_k);
+    setText('sig_datum_s',  state.studio_meta.sig_datum_s);
+  }
+  if (state.timeline) {
+    setText('tl_1_datum', state.timeline.step1);
+    setText('tl_2_datum', state.timeline.step2);
+    setText('tl_3_datum', state.timeline.step3);
+  }
+  if (state.ukljuceno) {
+    const inc = document.querySelector('.includes-list[contenteditable="true"]');
+    if (inc) inc.innerHTML = state.ukljuceno;
+  }
+  recalculate();
+}
+
+// Map onboarding canonical state → ponuda DOM
+function applyOnboardingState(s) {
+  // Klijent block
+  if (s.klijent) {
+    setText('klijent_ime',     s.klijent.ime);
+    setText('klijent_biznis',  s.klijent.biznis);
+    setText('klijent_telefon', s.klijent.telefon);
+    setText('klijent_email',   s.klijent.email);
+    setText('klijent_grad',    s.klijent.grad);
+    const tipDisplay = TIP_BIZNISA_LABEL[s.klijent.tip_biznisa] || s.klijent.tip_drugo || '—';
+    setText('klijent_tip', tipDisplay);
+    setText('klijent_kratko', s.klijent.biznis || s.klijent.ime);
+  }
+  // Paket block
+  if (s.paket) {
+    const izbor = (s.paket.izbor && s.paket.izbor !== 'ne-znam') ? s.paket.izbor : 'standard';
+    const def = PAKETI[izbor];
+    if (def) {
+      setText('paket_naziv', def.naziv);
+      setText('paket_title', def.oznaka);
+      setText('paket_sub', def.sub);
+      setText('paket_cijena', def.cijena);
+    }
+    if (s.paket.hosting) setHosting(s.paket.hosting);
+    // Addons
+    if (s.paket.addons) {
+      Object.keys(s.paket.addons).forEach(k => {
+        const row = document.querySelector(`.addon-toggle[data-key="${k}"]`);
+        if (row) {
+          if (s.paket.addons[k]) {
+            row.classList.add('included'); row.classList.remove('excluded');
+          }
+        }
+      });
+    }
+    // Auto-timeline
+    if (PAKETI[izbor]) updateTimelineForPackage(izbor);
+  }
+  toast('Ponuda popunjena iz onboarding upitnika');
+  recalculate();
+}
+
+function setHosting(value) {
+  document.querySelectorAll('.hosting-card').forEach(card => {
+    if (card.dataset.hosting === value) {
+      card.classList.add('included'); card.classList.remove('excluded');
+    } else {
+      card.classList.remove('included'); card.classList.add('excluded');
+    }
+  });
+}
+
+// Auto-fill timeline (3 steps) based on package
+function updateTimelineForPackage(paketIzbor) {
+  const days = TIMELINE_DAYS[paketIzbor] || 14;
+  const today = new Date();
+  const step1End = new Date(today); step1End.setDate(today.getDate() + 7);
+  const step2End = new Date(today); step2End.setDate(today.getDate() + days);
+  const step3End = new Date(step2End); step3End.setDate(step2End.getDate() + 2);
+
+  const fmt = d => `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}`;
+  setText('tl_1_datum', `${fmt(today)} — ${fmt(step1End)}`);
+  setText('tl_2_datum', `${fmt(step1End)} — ${fmt(step2End)}`);
+  setText('tl_3_datum', `${fmt(step2End)} — ${fmt(step3End)}`);
+}
+
+// ── EXPORT / IMPORT ──
+function exportState() {
+  const state = gatherState();
+  const slug = (state.klijent.biznis || state.klijent.ime || 'klijent')
+    .toLowerCase()
+    .replace(/[čć]/g,'c').replace(/š/g,'s').replace(/ž/g,'z').replace(/đ/g,'dj')
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0, 30);
+  const date = new Date().toISOString().slice(0, 10);
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Ruke_Ponuda_${slug || 'klijent'}_${date}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Ponuda izvezena kao JSON');
+}
+
+function importState(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const state = JSON.parse(e.target.result);
+      if (!state._meta || !state._meta.version || !state._meta.version.startsWith('ruke-')) {
+        toast('Neispravan fajl — nije Ruke state', 'err');
+        return;
+      }
+      applyState(state);
+      cacheState();
+      // toast inside applyState for onboarding case; otherwise:
+      if (state._meta.exportedBy !== 'ruke-onboarding') {
+        toast('Ponuda uspješno učitana');
+      }
+    } catch (err) {
+      toast('Greška pri učitavanju: ' + err.message, 'err');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function resetForm() {
+  if (!confirm('Obrisati sve podatke i kreni od nule?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+
+// localStorage cache (autosave)
+function cacheState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(gatherState())); } catch (e) {}
+}
+function loadCache() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) applyState(JSON.parse(raw));
+  } catch (e) {}
+}
+
+// ── PRICE CALCULATION ──
+function recalculate() {
+  const paketEl = document.querySelector('[data-key="paket_cijena"]');
+  let paket = parseFloat((paketEl?.textContent || '0').replace(/[^\d.]/g, '')) || 0;
+
+  // hosting cost
+  const hostingActive = getActiveHosting();
+  const hostingCost = HOSTING[hostingActive]?.cijena || 0;
+  const hostingLabel = HOSTING[hostingActive]?.label || '';
+
+  let dodaci = 0;
+  document.querySelectorAll('.addon-toggle.included').forEach(row => {
+    dodaci += parseFloat(row.dataset.price) || 0;
+  });
+
+  const ukupno = paket + hostingCost + dodaci;
+
+  document.getElementById('totPaket').textContent = paket.toLocaleString('bs-BA');
+  document.getElementById('totHosting').textContent = hostingCost.toLocaleString('bs-BA');
+  document.getElementById('totHostingLabel').textContent = hostingLabel;
+  document.getElementById('totDodaci').textContent = dodaci.toLocaleString('bs-BA');
+  document.getElementById('totUkupno').textContent = ukupno.toLocaleString('bs-BA');
+  document.getElementById('pay1').textContent = Math.round(ukupno / 2).toLocaleString('bs-BA');
+  document.getElementById('pay2').textContent = (ukupno - Math.round(ukupno / 2)).toLocaleString('bs-BA');
+}
+
+// ── TOGGLES ──
+// Addon row click
+document.querySelectorAll('.addon-toggle').forEach(row => {
+  row.addEventListener('click', () => {
+    row.classList.toggle('included');
+    row.classList.toggle('excluded');
+    recalculate();
+    cacheState();
+  });
+});
+
+// Hosting card click (single-select)
+document.querySelectorAll('.hosting-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const value = card.dataset.hosting;
+    setHosting(value);
+    recalculate();
+    cacheState();
+  });
+});
+
+// Editable changes
+document.addEventListener('input', e => {
+  if (e.target.matches('[contenteditable="true"]')) {
+    if (e.target.dataset.key === 'paket_cijena') recalculate();
+    cacheState();
+  }
+});
+
+// ── TOAST ──
+const toastEl = document.getElementById('toast');
+let toastTimer;
+function toast(msg, type) {
+  toastEl.textContent = msg;
+  toastEl.style.background = type === 'err' ? '#B14A3E' : '#1F1812';
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2400);
+}
+
+// ── ANIMATED COUNT-UP for totals ──
+function animateNumber(el, targetValue, duration = 600) {
+  if (!el) return;
+  const startValue = parseFloat((el.textContent || '0').replace(/[^\d.-]/g, '')) || 0;
+  const start = performance.now();
+  const ease = t => 1 - Math.pow(1 - t, 3); // easeOutCubic
+
+  function tick(now) {
+    const elapsed = Math.min(1, (now - start) / duration);
+    const value = startValue + (targetValue - startValue) * ease(elapsed);
+    el.textContent = Math.round(value).toLocaleString('bs-BA');
+    if (elapsed < 1) requestAnimationFrame(tick);
+    else el.textContent = targetValue.toLocaleString('bs-BA');
+  }
+  requestAnimationFrame(tick);
+}
+
+// Override recalculate to use animated count-up
+const _origRecalculate = recalculate;
+recalculate = function() {
+  const paketEl = document.querySelector('[data-key="paket_cijena"]');
+  let paket = parseFloat((paketEl?.textContent || '0').replace(/[^\d.]/g, '')) || 0;
+  const hostingActive = getActiveHosting();
+  const hostingCost = HOSTING[hostingActive]?.cijena || 0;
+  const hostingLabel = HOSTING[hostingActive]?.label || '';
+  let dodaci = 0;
+  document.querySelectorAll('.addon-toggle.included').forEach(row => {
+    dodaci += parseFloat(row.dataset.price) || 0;
+  });
+  const ukupno = paket + hostingCost + dodaci;
+
+  document.getElementById('totHostingLabel').textContent = hostingLabel;
+  animateNumber(document.getElementById('totPaket'), paket, 380);
+  animateNumber(document.getElementById('totHosting'), hostingCost, 380);
+  animateNumber(document.getElementById('totDodaci'), dodaci, 380);
+  animateNumber(document.getElementById('totUkupno'), ukupno, 520);
+  animateNumber(document.getElementById('pay1'), Math.round(ukupno / 2), 520);
+  animateNumber(document.getElementById('pay2'), ukupno - Math.round(ukupno / 2), 520);
+};
+
+// ── MOUSE-FOLLOW radial highlight on hosting cards ──
+document.querySelectorAll('.hosting-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
+    card.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
+  });
+});
+
+// ── AUTO-FILL FIRST OPEN ──
+function autoFillFirstOpen() {
+  // If there's already cached data, don't override
+  if (localStorage.getItem(STORAGE_KEY)) return;
+
+  // Auto-date today
+  const today = new Date();
+  const dateStr = `${String(today.getDate()).padStart(2,'0')}.${String(today.getMonth()+1).padStart(2,'0')}.${today.getFullYear()}.`;
+  setText('ponuda_datum', dateStr);
+  setText('sig_datum_s', dateStr);
+
+  // Auto-number: 2026-NNN, increments per year (resets at year change)
+  const year = today.getFullYear();
+  let counterData = {};
+  try { counterData = JSON.parse(localStorage.getItem(PONUDA_COUNTER_KEY) || '{}'); } catch(e) {}
+  if (typeof counterData !== 'object' || counterData === null) counterData = {};
+  const counter = (counterData[year] || 0) + 1;
+  counterData[year] = counter;
+  localStorage.setItem(PONUDA_COUNTER_KEY, JSON.stringify(counterData));
+  const num = `${year}-${String(counter).padStart(3,'0')}`;
+  setText('ponuda_broj', num);
+
+  // Default timeline for Standard
+  updateTimelineForPackage('standard');
+}
+
+// ── INIT ──
+autoFillFirstOpen();
+loadCache();
+recalculate();
+</script>
+
+</body>
+</html>
