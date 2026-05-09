@@ -1,0 +1,32 @@
+# Netlify build & deploy config — ruke.ba
+
+[build]
+  publish = "public"
+  # No build command — pure static HTML
+
+# Force www → apex redirect at the edge (handled here, not at Cloudflare)
+[[redirects]]
+  from = "https://www.ruke.ba/*"
+  to = "https://ruke.ba/:splat"
+  status = 301
+  force = true
+
+# Light security headers — sane defaults for static site
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+# Cache hints — long cache for static assets, short for HTML
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
