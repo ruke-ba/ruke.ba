@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Politika privatnosti — Ruke malih biznisa</title>
+<meta name="description" content="Kako Ruke malih biznisa prikuplja, koristi i čuva tvoje podatke. Kratko, plain Bosnian, bez pravničkog magla.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://ruke.ba/privatnost.html">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700&family=Lora:ital,wght@0,400;0,500;0,600;0,700&display=swap" rel="stylesheet">
+
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+
+<style>
+:root {
+  --cream:        #F6EEDF;
+  --cream-warm:   #EFE3CF;
+  --ink:          #1F1812;
+  --ink-warm:     #3D2E20;
+  --ink-soft:     #6B5640;
+  --ink-faint:    #9B8868;
+  --terra:        #8E4A1F;
+  --rule:         rgba(61, 46, 32, 0.16);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Lora', Georgia, serif;
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 1.7;
+  font-size: 1.05rem;
+  padding: 4rem 1.5rem;
+}
+
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  color: var(--terra);
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.02em;
+}
+
+h1 {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+  color: var(--ink);
+}
+
+.subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.3rem;
+  color: var(--ink-soft);
+  margin-bottom: 0.5rem;
+}
+
+.meta {
+  font-size: 0.9rem;
+  color: var(--ink-faint);
+  margin-bottom: 3rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+h2 {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 1.5rem;
+  margin: 2.5rem 0 0.75rem;
+  color: var(--ink-warm);
+}
+
+h2 .num {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  color: var(--terra);
+  font-size: 1.1rem;
+  margin-right: 0.4rem;
+}
+
+p { margin-bottom: 1rem; }
+
+p.lead {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem;
+  line-height: 1.5;
+  color: var(--ink-warm);
+  margin-bottom: 2rem;
+  font-style: italic;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 1rem;
+}
+
+ul li {
+  padding-left: 1.5rem;
+  position: relative;
+  margin-bottom: 0.5rem;
+}
+
+ul li::before {
+  content: "◆";
+  position: absolute;
+  left: 0;
+  color: var(--terra);
+  font-size: 0.7rem;
+  top: 0.55rem;
+}
+
+a {
+  color: var(--terra);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+a:hover { color: var(--ink-warm); }
+
+strong { color: var(--ink-warm); font-weight: 600; }
+
+.callout {
+  background: var(--cream-warm);
+  border-left: 3px solid var(--terra);
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: var(--ink-warm);
+  border-radius: 2px;
+}
+
+.back {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--rule);
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  text-align: center;
+}
+
+.back a {
+  font-size: 1.2rem;
+  color: var(--ink-warm);
+}
+
+.footer-mini {
+  margin-top: 3rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+  line-height: 1.6;
+}
+
+.footer-mini a { color: inherit; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="eyebrow">~ Politika privatnosti ~</div>
+  <h1>Tvoji podaci, naša pravila igre.</h1>
+  <p class="subtitle">Kratko, plain Bosnian, bez pravničkog magla.</p>
+  <p class="meta">Posljednje ažuriranje: 09.05.2026.</p>
+
+  <p class="lead">
+    Pričamo s ljudima koji nam povjeravaju svoj biznis. Vrijedno nam je
+    da znaš tačno šta radimo s onim što nam pošalješ kroz formu.
+  </p>
+
+  <h2><span class="num">№ 01</span> Ko je "mi"</h2>
+  <p>
+    <strong>Ruke malih biznisa</strong> je Artisan Studio sa sjedištem u Sarajevu, Bosna i Hercegovina.
+    Kontakt: <a href="mailto:zdravo@ruke.ba">zdravo@ruke.ba</a> · WhatsApp <a href="https://wa.me/38763918666">+387 63 918 666</a>.
+  </p>
+  <p>
+    U ovom dokumentu, <em>"mi"</em> znači Ruke malih biznisa, a <em>"ti"</em> znači osoba
+    koja popunjava našu formu ili nas kontaktira.
+  </p>
+
+  <h2><span class="num">№ 02</span> Šta prikupljamo</h2>
+  <p>Kroz formu na stranici <a href="ruke-onboarding.html">/ruke-onboarding</a> tražimo:</p>
+  <ul>
+    <li>Tvoje ime i naziv biznisa</li>
+    <li>Kontakt — telefon i email</li>
+    <li>Grad i (opciono) adresu, ako klijenti dolaze kod tebe</li>
+    <li>Tip i opis biznisa, iskustvo, cijene, radno vrijeme</li>
+    <li>Vizualne i sadržajne preferencije za web stranicu</li>
+    <li>Bilo koje dodatne napomene koje sama upišeš</li>
+  </ul>
+  <p>
+    Sve drugo što ne tražimo eksplicitno — ne prikupljamo. Nema cookies trackera,
+    nema reklamnih piksela, nema prodaje podataka trećim licima.
+  </p>
+
+  <h2><span class="num">№ 03</span> Zašto nam treba</h2>
+  <ul>
+    <li>Da ti odgovorimo na upit u roku od 24 sata</li>
+    <li>Da pripremimo ponudu prilagođenu tvom biznisu</li>
+    <li>Da, ako se dogovorimo, izradimo tvoju web stranicu</li>
+    <li>Da te kontaktiramo o detaljima projekta dok traje</li>
+  </ul>
+
+  <h2><span class="num">№ 04</span> Pravna osnova</h2>
+  <p>
+    Tvoj <strong>pristanak</strong> kad označiš kućicu na formi, plus
+    <strong>preduzimanje radnji prije zaključenja ugovora</strong> — odnosno priprema ponude
+    koju si tražila. Ovo su standardne osnove iz Zakona o zaštiti ličnih podataka BiH
+    i opšte uredbe EU o zaštiti podataka (GDPR), koje primjenjujemo dobrovoljno.
+  </p>
+
+  <h2><span class="num">№ 05</span> S kim dijelimo</h2>
+  <p>Tvoji podaci nikad ne idu trećim stranama u marketinške ili komercijalne svrhe. Tehnički, dvije usluge ih dotiču:</p>
+  <ul>
+    <li><strong>Netlify</strong> (USA) — host stranice i prijem podataka iz forme. Standardni industrijski hosting partner.</li>
+    <li><strong>Zoho Mail</strong> (EU datacentar) — naša poslovna email pošta na <em>@ruke.ba</em>.</li>
+  </ul>
+  <p>
+    Obje usluge imaju svoje politike privatnosti i obje primjenjuju GDPR standarde.
+    Mi <em>ne</em> dijelimo podatke ni s jednom drugom platformom — ni s analytics-om,
+    ni s reklamnim mrežama.
+  </p>
+
+  <h2><span class="num">№ 06</span> Šta tvoj browser radi lokalno</h2>
+  <div class="callout">
+    Dok popunjavaš formu, tvoj browser <strong>kod tebe</strong> čuva tekuću verziju —
+    da ti se ne izgubi ako zatvoriš tab ili ti otkaže net. Ovo nikad ne stiže do nas
+    dok ne klikneš pošalji. Brišemo ga automatski kad uspješno pošalješ.
+  </div>
+  <p>
+    Tehnički, koristimo <em>localStorage</em> — to je dio tvog browsera, ne naš server.
+    Ne koristimo cookies za analitiku ili tracking. Koristimo Cloudflare Web Analytics —
+    cookieless analitiku koja broji posjete bez identifikacije pojedinačnih posjetilaca.
+    Ne dijeli podatke s trećim stranama, ne postavlja cookies, ne zahtijeva consent banner.
+  </p>
+
+  <h2><span class="num">№ 07</span> Koliko dugo čuvamo</h2>
+  <ul>
+    <li><strong>Ako ne zaključimo saradnju:</strong> brišemo tvoje podatke u roku od 30 dana od posljednjeg kontakta.</li>
+    <li><strong>Ako radimo zajedno:</strong> čuvamo dok traje saradnja plus 12 mjeseci nakon završetka — radi računovodstva, garancija i eventualnih pitanja.</li>
+    <li><strong>Backup kopije:</strong> mogu se zadržati još 90 dana radi tehničke obnove, nakon čega se trajno brišu.</li>
+  </ul>
+
+  <h2><span class="num">№ 08</span> Tvoja prava</h2>
+  <p>U svakom trenutku, bez objašnjenja, možeš:</p>
+  <ul>
+    <li>Tražiti uvid u sve podatke koje imamo o tebi</li>
+    <li>Tražiti ispravku ako je nešto netačno</li>
+    <li>Tražiti brisanje ("zaboravi me") — uradićemo u roku od 30 dana</li>
+    <li>Povući pristanak — i mi prestajemo s obradom</li>
+    <li>Tražiti prenos podataka u standardnom formatu (JSON ili PDF)</li>
+  </ul>
+  <p>
+    Pošalji email na <a href="mailto:zdravo@ruke.ba">zdravo@ruke.ba</a> sa naslovom
+    <em>"Moji podaci"</em>. Ne treba forma, ne treba razlog.
+  </p>
+
+  <h2><span class="num">№ 09</span> Bezbjednost</h2>
+  <p>
+    Komunikacija s formom ide preko HTTPS-a (šifrirano). Email kod nas radi preko
+    Zoho Mail s 2FA na našoj strani. Ne čuvamo lozinke, ne čuvamo podatke o karticama,
+    ne čuvamo ništa što ne tražimo eksplicitno kroz formu.
+  </p>
+  <p>
+    Što manje podataka držimo, manje ima šta da curi. To je princip.
+  </p>
+
+  <h2><span class="num">№ 10</span> Pritužbe</h2>
+  <p>
+    Ako misliš da nismo ispoštovali ovo što piše ovdje, prvo nam reci direktno —
+    <a href="mailto:zdravo@ruke.ba">zdravo@ruke.ba</a>. Riješićemo brzo.
+  </p>
+  <p>
+    Imaš pravo i da podneseš pritužbu nadzornom organu:
+    <strong>Agencija za zaštitu ličnih podataka u BiH</strong>,
+    <a href="https://www.azlp.ba" target="_blank" rel="noopener">azlp.ba</a>.
+  </p>
+
+  <h2><span class="num">№ 11</span> Promjene</h2>
+  <p>
+    Ako se ova politika nešto materijalno promijeni, novi datum stavljamo na vrh i,
+    ako smo i dalje u kontaktu s tobom, javljamo emailom. Stara verzija ostaje arhivirana.
+  </p>
+
+  <h2><span class="num">№ 12</span> Kontakt</h2>
+  <p>
+    Sve oko privatnosti, podataka, brisanja, pitanja —<br>
+    <strong>Email:</strong> <a href="mailto:zdravo@ruke.ba">zdravo@ruke.ba</a><br>
+    <strong>WhatsApp:</strong> <a href="https://wa.me/38763918666">+387 63 918 666</a><br>
+    <strong>Adresa:</strong> Sarajevo, Bosna i Hercegovina
+  </p>
+
+  <div class="back">
+    <a href="/">← Nazad na ruke.ba</a>
+  </div>
+
+  <div class="footer-mini">
+    © 2026 Ruke malih biznisa · Artisan Studio · Sarajevo<br>
+    <a href="/">ruke.ba</a> · #RukeMalihBiznisa
+  </div>
+
+</div>
+
+<!-- Cloudflare Web Analytics -->
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "860ea06e0757443c90b28348be9bf55d"}'></script>
+<!-- End Cloudflare Web Analytics -->
+</body>
+</html>
